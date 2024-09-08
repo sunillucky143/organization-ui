@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   Container,
   TextField,
@@ -15,7 +16,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-import miningBack from '../assets/mining-back.jpeg'; // Update the path
+import miningBack from '../assets/mining-back1.jpg'; // Update the path
 
 function LoginPage() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
