@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import miningBack from '../assets/mining-back1.jpg'; 
 
 import {
   Container,
@@ -76,7 +77,7 @@ const SignUpPage = () => {
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: theme.palette.background.default,
-          backgroundImage: `linear-gradient(135deg, ${theme.palette.primary.main} 30%, #f06292 100%)`, // Gradient background
+          backgroundImage: `url(${miningBack})`, // Gradient background
           backgroundSize: "cover",
           backgroundPosition: "center",
           backdropFilter: "blur(10px)",
@@ -86,14 +87,16 @@ const SignUpPage = () => {
           component={motion.div}
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.9 }}
+          transition={{ duration: 0.6 }}
           elevation={3}
           sx={{
             padding: "40px",
             borderRadius: "10px",
-            backgroundColor: theme.palette.background.paper,
+            backgroundColor: "rgba(255, 255, 255, 0.2)", // Semi-transparent white
+            backdropFilter: "blur(10px)", // Background blur effect
             width: { xs: "90%", sm: "400px" }, // Responsive width
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)", // Shadow to highlight the box
+            border: "1px solid rgba(255, 255, 255, 0.3)", // Optional subtle border
           }}
         >
           <Typography
