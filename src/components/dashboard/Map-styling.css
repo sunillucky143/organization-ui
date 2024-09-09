@@ -1,0 +1,14 @@
+.map {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .map-placeholder {
+    background-color: #bdc3c7;
+    height: 200px;
+    text-align: center;
+    line-height: 200px;
+    color: #34495e;
+  }
+  

@@ -36,3 +36,23 @@
     transform: rotate(360deg);
   }
 }
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+
+  .dashboard-content {
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+  }
+}
+

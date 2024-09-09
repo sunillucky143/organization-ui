@@ -1,0 +1,30 @@
+.workflow {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .progress-bar {
+    background-color: #bdc3c7;
+    height: 25px;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .progress {
+    background-color: #27ae60;
+    height: 100%;
+    color: white;
+    text-align: center;
+    line-height: 25px;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .error {
+    color: #e74c3c;
+    font-size: 1.1em;
+    text-align: center;
+  }
+  
