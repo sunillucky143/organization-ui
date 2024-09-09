@@ -1,0 +1,57 @@
+/* Sidebar.css */
+.sidebar {
+  width: 250px; /* Default expanded width */
+  background-color: #2c3e50;
+  height: 100vh;
+  color: white;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.sidebar.collapsed {
+  width: 80px; /* Collapsed width */
+}
+
+.sidebar .toggle-button {
+  position: absolute;
+  top: 10px;
+  left: 100%;
+  margin-left: -30px;
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar ul li a svg {
+  margin-right: 10px; /* Space between icon and text */
+}
+
+/* Optional: Adjust text and layout for collapsed state */
+.sidebar.collapsed ul li {
+  text-align: center;
+}
+
+.sidebar.collapsed ul li a {
+  font-size: 12px;
+}

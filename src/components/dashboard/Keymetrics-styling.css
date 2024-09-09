@@ -1,0 +1,36 @@
+.key-metrics {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .metrics-grid {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .metric-card {
+    flex: 1;
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .metric-card h3 {
+    margin: 0 0 10px;
+  }
+  
+  .metric-card p {
+    font-size: 1.2em;
+    margin: 0;
+  }
+  
+  /* Loading state */
+  .loading {
+    text-align: center;
+    font-size: 1.2em;
+    color: #bdc3c7;
+  }
+  

@@ -4,10 +4,12 @@ import { AuthProvider, useAuth } from './context/AuthContext'; // Adjust import 
 import SignUpPage from './components/SignUpPage';
 import ForgetPasswordPage from './components/ForgetPasswordPage';
 import LoginPage from './components/LoginPage'; // Assuming you have a LoginPage component
-import TailingForm from './components/TailingsForm';
+import TailingsForm from './components/TailingsForm';
+import Dashboard from "./components/dashboard/Home-screen";
 
 const AppRoutes = () => {
-  const { isAuthenticated } = useAuth();
+  //const { isAuthenticated } = useAuth();
+  const isAuthenticated = true;
 
   return (
     <Routes>
@@ -19,7 +21,11 @@ const AppRoutes = () => {
       {/* Protected Route */}
       <Route
         path="/tailing-form"
-        element={isAuthenticated ? <TailingForm /> : <Navigate to="/" />}
+        element={isAuthenticated ? <TailingsForm /> : <Navigate to="/" />}
+      />
+      <Route
+        path="/dashboard"
+        element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />}
       />
 
       {/* Redirect to login if accessing any other route */}

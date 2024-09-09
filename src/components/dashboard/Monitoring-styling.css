@@ -1,0 +1,43 @@
+.monitoring {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .charts {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .chart {
+    flex: 1;
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chart h3 {
+    margin: 0 0 10px;
+  }
+  
+  .chart p {
+    font-size: 1.2em;
+    margin: 0;
+  }
+  
+  /* Loading state */
+  .loading {
+    text-align: center;
+    font-size: 1.2em;
+    color: #bdc3c7;
+  }
+  
+  /* Error state */
+  .error {
+    color: #e74c3c;
+    font-size: 1.1em;
+    text-align: center;
+  }
+  
