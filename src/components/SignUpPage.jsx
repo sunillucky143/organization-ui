@@ -104,7 +104,7 @@ const SignUpPage = () => {
             sx={{
               mb: 3,
               textAlign: "center",
-              color: theme.palette.primary.main,
+              color: "black",
             }}
           >
             Sign Up
@@ -170,7 +170,7 @@ const SignUpPage = () => {
           </Box>
           <Typography variant="body2" component="p" textAlign="center">
             Already have an account?{' '}
-            <Link to="/" style={{ color: theme.palette.primary.main }}>
+            <Link to="/" style={{ color: "black" }}>
               Log In
             </Link>
           </Typography>

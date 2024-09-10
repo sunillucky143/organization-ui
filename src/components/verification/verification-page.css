@@ -1,0 +1,66 @@
+.verification-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .verification-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .share-icon {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .share-icon i {
+    color: #007bff;
+  }
+  
+  .content-layout {
+    display: flex;
+    gap: 20px;
+  }
+  
+  /* Left side: Procedure */
+  .left-side {
+    flex: 2; /* Takes up more space */
+  }
+  
+  .procedure-section {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Right side: Safety, Laws, and Actions */
+  .right-side {
+    flex: 1; /* Takes up less space */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* Top section for Safety and Laws */
+  .right-top {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /*.safety-section,
+  .laws-section {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    height: 200px;
+  }*/

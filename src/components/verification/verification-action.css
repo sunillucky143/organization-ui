@@ -1,0 +1,44 @@
+.actions-container {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+}
+
+.share-btn {
+  background-color: #28a745;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.share-btn:hover {
+  background-color: #218838;
+}
+
+.update-btn {
+  background-color: #ffc107;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.update-btn:hover {
+  background-color: #e0a800;
+}
+
+.verify-btn {
+  background-color: #007bff;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.verify-btn:hover {
+  background-color: #0056b3;
+}
