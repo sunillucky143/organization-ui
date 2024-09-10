@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Document, Page } from 'react-pdf';
-import { pdfjs } from 'react-pdf';
-import './procedure-ele.css'; // Combined styles into a single file
+import { Document, Page } from 'react-pdf'; // Importing from react-pdf
+import { pdfjs } from 'react-pdf'; // To ensure the PDF worker is set
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import './procedure-ele.css';
 
 // Set the worker for PDF.js
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -13,17 +14,12 @@ const Procedure = () => {
   const [scale, setScale] = useState(1.5); // Initial zoom level
 
   useEffect(() => {
-    // Replace with your actual API call to fetch the PDF URL
-    const fetchPdfUrl = async () => {
-      try {
-        const response = await fetch('https://www.orimi.com/pdf-test.pdf'); // Replace with your API endpoint
-        const data = await response.json();
-        setPdfUrl(data.pdfUrl);
-      } catch (error) {
-        console.error('Error fetching PDF:', error);
-      }
+    // Simulate API call to fetch the PDF URL
+    const simulateApiCall = () => {
+      const samplePdfUrl = 'https://www.orimi.com/pdf-test.pdf'; // Use a sample PDF URL
+      setPdfUrl(samplePdfUrl);
     };
-    fetchPdfUrl();
+    simulateApiCall();
   }, []);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -31,16 +27,12 @@ const Procedure = () => {
     setPageNumber(1); // Reset to the first page when a new document is loaded
   };
 
-  const onDocumentError = (error) => {
-    console.error('Error loading PDF:', error);
-  };
-
   const changePage = (offset) => {
     setPageNumber((prevPageNumber) => prevPageNumber + offset);
   };
 
-  const zoomIn = () => setScale((prevScale) => Math.min(prevScale + 0.2, 3));
-  const zoomOut = () => setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
+  const zoomIn = () => setScale((prevScale) => Math.min(prevScale + 0.2, 3)); // Max zoom in to 3x
+  const zoomOut = () => setScale((prevScale) => Math.max(prevScale - 0.2, 0.5)); // Min zoom out to 0.5x
 
   return (
     <div className="procedure-container">
@@ -50,7 +42,6 @@ const Procedure = () => {
           <Document
             file={pdfUrl}
             onLoadSuccess={onDocumentLoadSuccess}
-            onError={onDocumentError}
             loading="Loading PDF..."
           >
             <Page pageNumber={pageNumber} scale={scale} />
@@ -59,20 +50,20 @@ const Procedure = () => {
           {/* Controls for navigation and zoom */}
           <div className="pdf-controls">
             <button onClick={() => changePage(-1)} disabled={pageNumber <= 1}>
-              <span aria-label="Previous page">Previous</span>
+              Previous
             </button>
             <span>
               Page {pageNumber} of {numPages}
             </span>
             <button onClick={() => changePage(1)} disabled={pageNumber >= numPages}>
-              <span aria-label="Next page">Next</span>
+              Next
             </button>
 
             <button onClick={zoomOut} disabled={scale <= 0.5}>
-              <span aria-label="Zoom out">Zoom Out</span>
+              Zoom Out
             </button>
             <button onClick={zoomIn} disabled={scale >= 3}>
-              <span aria-label="Zoom in">Zoom In</span>
+              Zoom In
             </button>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import miningBack from '../assets/mining-back1.jpg'; 
+import axios from 'axios';
 
 import {
   Container,
@@ -22,25 +23,52 @@ const SignUpPage = () => {
 
     const [formData, setFormData] = useState({
         organizationName: "",
-        employeeName: "",
+        username: "",
         emailAddress: "",
         password: "",
         confirmPassword: "",
     });
+
+    const { organizationName, username, emailAddress, password, confirmPassword } = formData;
+
     
     const navigate = useNavigate();
-    
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-    
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Form Data:', formData);
-        // Here you can also add code to send the form data to your backend server if needed
-        navigate('/login'); // Redirect to login page or another page after submission
+
+    const validatePasswords = () => {
+      if (password !== confirmPassword || password === '' || confirmPassword === '') {
+        setIsButtonDisabled(true);
+      } else {
+        setIsButtonDisabled(false);
+      }
     };
+
+    const onBlur = () => {
+      validatePasswords();
+    };
+    
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!isButtonDisabled) {
+        try {
+          const res = await axios.post('http://localhost:8000/register/', {
+            organizationName,
+            username,
+            email: emailAddress, // Ensure the naming matches with backend
+            password,
+            confirmPassword,
+          });
+          console.log(res.data);  // Handle successful response (e.g., redirect)
+          navigate('/login');  // Redirect to login page or another page after submission
+        } catch (error) {
+          console.error(error.response?.data || error.message);
+        }
+      }
+  };
 
     const theme = createTheme({
         palette: {
@@ -121,10 +149,10 @@ const SignUpPage = () => {
           />
           <TextField
             label="Employee Name"
-            name="employeeName"
+            name="username"
             fullWidth
             variant="outlined"
-            value={formData.employeeName}
+            value={formData.username}
             onChange={handleChange}
             sx={{ mb: 2 }}
           />
@@ -146,6 +174,7 @@ const SignUpPage = () => {
             variant="outlined"
             value={formData.password}
             onChange={handleChange}
+            onBlur={onBlur}
             sx={{ mb: 2 }}
           />
           <TextField
@@ -156,17 +185,20 @@ const SignUpPage = () => {
             variant="outlined"
             value={formData.confirmPassword}
             onChange={handleChange}
+            onBlur={onBlur}
             sx={{ mb: 2 }}
           />
           <Button
             variant="contained"
             color="primary"
             onClick={handleSubmit}
+            disabled={isButtonDisabled}
             fullWidth
             sx={{ mb: 2 }}
           >
             Sign Up
           </Button>
+          {password !== confirmPassword && <p color='red'>Passwords do not match!</p>}
           </Box>
           <Typography variant="body2" component="p" textAlign="center">
             Already have an account?{' '}
