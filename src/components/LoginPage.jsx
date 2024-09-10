@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import axios from 'axios'; // Make sure to import axios
+import { useNavigate } from 'react-router-dom';
+
 
 import {
   Container,
@@ -50,9 +53,25 @@ function LoginPage() {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
+  
+  const navigate = useNavigate();
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:8000/login/', {
+        username: loginData.email,
+        password: loginData.password,
+      });
+      console.log("Login successful:", response.data);
+      // Assuming the backend returns a token or similar authentication data
+      // You might want to save this in localStorage or context
+      // localStorage.setItem('authToken', response.data.token);
 
-  const handleLogin = () => {
-    console.log("Login data:", loginData);
+      // Navigate to the dashboard page
+      navigate('/dashboard');
+    } catch (error) {
+      console.error("Login failed:", error.response?.data || error.message);
+      // Handle login error (e.g., show an error message to the user)
+    }
   };
 
   return (
