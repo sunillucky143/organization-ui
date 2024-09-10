@@ -6,6 +6,7 @@ import ForgetPasswordPage from './components/ForgetPasswordPage';
 import LoginPage from './components/LoginPage'; // Assuming you have a LoginPage component
 import TailingsForm from './components/TailingsForm';
 import Dashboard from "./components/dashboard/Home-screen";
+import VerificationPage from "./components/verification/verification_page";
 
 const AppRoutes = () => {
   //const { isAuthenticated } = useAuth();
@@ -22,6 +23,10 @@ const AppRoutes = () => {
       <Route
         path="/tailing-form"
         element={isAuthenticated ? <TailingsForm /> : <Navigate to="/" />}
+      />
+      <Route
+        path="/verification"
+        element={isAuthenticated ? <VerificationPage /> : <Navigate to="/" />}
       />
       <Route
         path="/dashboard"

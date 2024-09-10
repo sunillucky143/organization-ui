@@ -77,7 +77,7 @@ const theme = createTheme({
             sx={{
               mb: 3,
               textAlign: "center",
-              color: theme.palette.primary.main,
+              color: "black",
             }}
           >
             Forgot Password
@@ -105,7 +105,7 @@ const theme = createTheme({
           </Button>
           <Typography variant="body2" component="p" textAlign="center">
             Remember your password?{' '}
-            <Link to="/" style={{ color: theme.palette.primary.main }}>
+            <Link to="/" style={{ color: "black" }}>
               Log In
             </Link>
           </Typography>

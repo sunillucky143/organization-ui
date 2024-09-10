@@ -97,7 +97,7 @@ function LoginPage() {
             sx={{
               mb: 3,
               textAlign: "center",
-              color: theme.palette.primary.main,
+              color: "black",
             }}
           >
             Welcome Back!
@@ -147,7 +147,7 @@ function LoginPage() {
             />
 
             <Box sx={{ textAlign: "right", mb: 3 }}>
-              <Link href="/forget-password" underline="hover" color="primary">
+              <Link href="/forget-password" underline="hover" color="black">
                 Forgot Password?
               </Link>
             </Box>
@@ -168,7 +168,7 @@ function LoginPage() {
           <Box sx={{ textAlign: "center", mt: 2 }}>
             <Typography variant="body2" sx={{ color: theme.palette.text.primary }}>
               Don't have an account?{" "}
-              <Link href="/sign-up" underline="hover" color="primary">
+              <Link href="/sign-up" underline="hover" color="black">
                 Sign Up
               </Link>
             </Typography>

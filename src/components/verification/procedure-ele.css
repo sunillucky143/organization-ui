@@ -1,0 +1,53 @@
+.procedure-container {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  height: 100%; /* Adjust height to allow content to determine the size */
+  max-height: 600px; /* Set a maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  }
+  
+  .procedure-container h2 {
+    font-size: 1.5rem;
+    color: #333;
+    align-content: center;
+  }
+  
+  .procedure-container p {
+    font-size: 1.1rem;
+    color: #555;
+  }
+  
+  .pdf-viewer {
+    border: 1px solid #ddd;
+    padding: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .pdf-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .pdf-controls button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .pdf-controls button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pdf-controls span {
+    display: inline-block;
+    margin: 0 10px;
+  }
+  
