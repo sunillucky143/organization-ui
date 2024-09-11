@@ -17,11 +17,11 @@ import {
   FormGroup,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 function TailingsForm() {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
   const [form, setForm] = useState({
     mineralContent: "",
     chemicalComposition: "",
@@ -38,19 +38,20 @@ function TailingsForm() {
   });
 
   const [selectedMineral, setSelectedMineral] = useState("");
+  const [customMineralContent, setCustomMineralContent] = useState(""); // New state for custom mineral content
 
   const theme = createTheme({
     palette: {
-      mode: prefersDarkMode ? 'dark' : 'light',
+      mode: prefersDarkMode ? "dark" : "light",
       primary: {
-        main: prefersDarkMode ? '#BB86FC' : '#6200EE',
+        main: prefersDarkMode ? "#BB86FC" : "#6200EE",
       },
       background: {
-        default: prefersDarkMode ? '#121212' : '#f9f9f9',
-        paper: prefersDarkMode ? '#1f1f1f' : '#ffffff',
+        default: prefersDarkMode ? "#121212" : "#f9f9f9",
+        paper: prefersDarkMode ? "#1f1f1f" : "#ffffff",
       },
       text: {
-        primary: prefersDarkMode ? '#ffffff' : '#000000',
+        primary: prefersDarkMode ? "#ffffff" : "#000000",
       },
     },
     typography: {
@@ -74,7 +75,45 @@ function TailingsForm() {
   };
 
   const handleSubmit = () => {
-    console.log("Form submitted:", form);
+    const mineralContentToSubmit = form.mineralContent === "Other" && customMineralContent
+    ? customMineralContent
+    : form.mineralContent;
+
+    const formData = {
+      mineralContent: mineralContentToSubmit,
+      chemicalComposition: form.chemicalComposition,
+      physicalCharacteristics: form.physicalCharacteristics,
+      phLevel: form.phLevel,
+      dissolvedSolids: form.dissolvedSolids,
+      heavyMetals: form.heavyMetals,
+      quantity: form.quantity,
+      storageMethod: form.storageMethod,
+      dustEmissions: form.dustEmissions,
+      treatmentObjectives: form.treatmentObjectives,
+      technologies: form.technologies,
+      location: form.location
+    };
+    console.log(formData);
+  
+    fetch('http://localhost:8000/process-form/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log("LLM Response:", data.response);
+          // Handle success: Display response or take action
+        } else {
+          console.error("Error:", data.error);
+        }
+      })
+      .catch(error => {
+        console.error("Error submitting form:", error);
+      });
   };
 
   const handleCheckboxChange = (e) => {
@@ -99,8 +138,8 @@ function TailingsForm() {
           minHeight: "100vh",
           padding: "50px 0",
           backgroundColor: theme.palette.background.default,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
@@ -117,13 +156,23 @@ function TailingsForm() {
           elevation={3}
           sx={{ padding: "30px", backgroundColor: theme.palette.background.paper }}
         >
-          {/* Your form content here */}
-          {/* Move the entire form logic here from App.js */}
           <Grid container spacing={3}>
             {/* Mineral Content and Water Quality Data */}
             <Grid item xs={12} sm={6}>
-              <Paper elevation={2} sx={{ padding: 2, border: '1px solid', borderColor: theme.palette.divider, backgroundColor: prefersDarkMode ? '#444444' : '#ffffff', borderRadius: 2 }}>
-                <Typography variant="h6" sx={{ mb: 2, color: prefersDarkMode ? '#ffffff' : '#000000' }}>
+              <Paper
+                elevation={2}
+                sx={{
+                  padding: 2,
+                  border: "1px solid",
+                  borderColor: theme.palette.divider,
+                  backgroundColor: prefersDarkMode ? "#444444" : "#ffffff",
+                  borderRadius: 2,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ mb: 2, color: prefersDarkMode ? "#ffffff" : "#000000" }}
+                >
                   Mineral Content
                 </Typography>
                 <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
@@ -155,18 +204,35 @@ function TailingsForm() {
                     <MenuItem value="Other">Other</MenuItem>
                   </Select>
                 </FormControl>
+
+                {/* Show file upload and custom input when "Other" is selected */}
                 {selectedMineral === "Other" && (
-                  <Grid item xs={12}>
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                      Upload Document
-                    </Typography>
-                    <input
-                      type="file"
-                      accept=".pdf, .doc, .docx, .xls, .xlsx"
-                      onChange={handleFileUpload}
-                    />
-                  </Grid>
+                  <>
+                    <Grid item xs={12}>
+                      <Typography variant="h6" sx={{ mb: 2 }}>
+                        Upload Document
+                      </Typography>
+                      <input
+                        type="file"
+                        accept=".pdf, .doc, .docx, .xls, .xlsx"
+                        onChange={handleFileUpload}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Enter Mineral Content Name"
+                        name="customMineralContent"
+                        fullWidth
+                        variant="outlined"
+                        value={customMineralContent}
+                        onChange={(e) => setCustomMineralContent(e.target.value)} // Update custom mineral content state
+                        sx={{ mb: 2 }}
+                        helperText="Provide a name for the custom mineral content."
+                      />
+                    </Grid>
+                  </>
                 )}
+
                 <TextField
                   label="Chemical Composition"
                   name="chemicalComposition"
@@ -192,22 +258,36 @@ function TailingsForm() {
               </Paper>
             </Grid>
 
+            {/* Water Quality Data */}
             <Grid item xs={12} sm={6}>
-              <Paper elevation={2} sx={{ padding: 2, border: '1px solid', borderColor: theme.palette.divider, backgroundColor: prefersDarkMode ? '#444444' : '#ffffff', borderRadius: 2 }}>
-                <Typography variant="h6" sx={{ mb: 2, color: prefersDarkMode ? '#ffffff' : '#000000' }}>
+              <Paper
+                elevation={2}
+                sx={{
+                  padding: 2,
+                  border: "1px solid",
+                  borderColor: theme.palette.divider,
+                  backgroundColor: prefersDarkMode ? "#444444" : "#ffffff",
+                  borderRadius: 2,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ mb: 2, color: prefersDarkMode ? "#ffffff" : "#000000" }}
+                >
                   Water Quality Data
                 </Typography>
+
                 <TextField
-                  label="pH Levels"
+                  label="pH Level"
                   name="phLevel"
                   fullWidth
-                  type="number"
                   variant="outlined"
                   value={form.phLevel}
                   onChange={handleChange}
                   sx={{ mb: 2 }}
-                  helperText="Check the acidity or alkalinity of water in the tailings."
+                  helperText="Indicate acidity or alkalinity of the tailings water."
                 />
+
                 <TextField
                   label="Dissolved Solids"
                   name="dissolvedSolids"
@@ -216,184 +296,226 @@ function TailingsForm() {
                   value={form.dissolvedSolids}
                   onChange={handleChange}
                   sx={{ mb: 2 }}
-                  helperText="Analyze the concentration of salts and other dissolved materials."
+                  helperText="Concentration of dissolved solids, such as salts and minerals."
                 />
+
                 <TextField
-                  label="Heavy Metals Concentration"
+                  label="Heavy Metals"
                   name="heavyMetals"
                   fullWidth
+                  multiline
+                  rows={4}
                   variant="outlined"
                   value={form.heavyMetals}
                   onChange={handleChange}
                   sx={{ mb: 2 }}
-                  helperText="Measure levels of heavy metals like lead, cadmium, and zinc."
+                  helperText="Presence of heavy metals like lead, mercury, or cadmium."
                 />
               </Paper>
             </Grid>
 
-            {/* Volume and Storage */}
-            <Grid item xs={12}>
-              <Paper elevation={2} sx={{ padding: 2, border: '1px solid', borderColor: theme.palette.divider, backgroundColor: prefersDarkMode ? '#444444' : '#ffffff', borderRadius: 2 }}>
-                <Typography variant="h6" sx={{ color: prefersDarkMode ? '#ffffff' : '#000000' }}>
-                  Volume and Storage
+            {/* Additional Fields */}
+            <Grid item xs={12} sm={6}>
+              <Paper
+                elevation={2}
+                sx={{
+                  padding: 2,
+                  border: "1px solid",
+                  borderColor: theme.palette.divider,
+                  backgroundColor: prefersDarkMode ? "#444444" : "#ffffff",
+                  borderRadius: 2,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ mb: 2, color: prefersDarkMode ? "#ffffff" : "#000000" }}
+                >
+                  Tailings Storage & Environmental Concerns
                 </Typography>
+
                 <TextField
-                  label="Quantity of Tailings"
+                  label="Quantity"
                   name="quantity"
                   fullWidth
                   variant="outlined"
                   value={form.quantity}
                   onChange={handleChange}
-                  helperText="Measure the volume of tailings for disposal or treatment."
+                  sx={{ mb: 2 }}
+                  helperText="Volume or mass of tailings produced."
                 />
+
                 <TextField
-                  label="Current Storage Method"
+                  label="Storage Method"
                   name="storageMethod"
                   fullWidth
                   variant="outlined"
                   value={form.storageMethod}
                   onChange={handleChange}
-                  helperText="Identify how the tailings are stored (tailing ponds, dry stacking, etc.)."
+                  sx={{ mb: 2 }}
+                  helperText="Type of storage method used (e.g., dams, ponds)."
                 />
+
                 <TextField
-                  label="Potential for Dust Emissions"
+                  label="Dust Emissions"
                   name="dustEmissions"
                   fullWidth
                   variant="outlined"
                   value={form.dustEmissions}
                   onChange={handleChange}
-                  helperText="Assess the risk of dust dispersal from dry tailings."
+                  sx={{ mb: 2 }}
+                  helperText="Potential dust emissions from dry tailings."
                 />
               </Paper>
             </Grid>
 
             {/* Treatment Objectives */}
-            <Grid item xs={12}>
-              <Paper elevation={2} sx={{ padding: 2, border: '1px solid', borderColor: theme.palette.divider, backgroundColor: prefersDarkMode ? '#444444' : '#ffffff', borderRadius: 2 }}>
-                <Typography variant="h6" sx={{ mb: 2, color: prefersDarkMode ? '#ffffff' : '#000000' }}>
+            <Grid item xs={12} sm={6}>
+              <Paper
+                elevation={2}
+                sx={{
+                  padding: 2,
+                  border: "1px solid",
+                  borderColor: theme.palette.divider,
+                  backgroundColor: prefersDarkMode ? "#444444" : "#ffffff",
+                  borderRadius: 2,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ mb: 2, color: prefersDarkMode ? "#ffffff" : "#000000" }}
+                >
                   Treatment Objectives
                 </Typography>
+
                 <FormGroup>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={form.treatmentObjectives.includes("reduce-toxicity")}
+                        checked={form.treatmentObjectives.includes("Neutralization")}
                         onChange={handleCheckboxChange}
-                        value="reduce-toxicity"
                         name="treatmentObjectives"
+                        value="Neutralization"
                       />
                     }
-                    label="Reduce Toxicity"
+                    label="Neutralization (pH adjustment)"
                   />
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={form.treatmentObjectives.includes("stabilize-hazardous")}
+                        checked={form.treatmentObjectives.includes("Precipitation")}
                         onChange={handleCheckboxChange}
-                        value="stabilize-hazardous"
                         name="treatmentObjectives"
+                        value="Precipitation"
                       />
                     }
-                    label="Stabilize Hazardous Materials"
+                    label="Precipitation (metal recovery)"
                   />
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={form.treatmentObjectives.includes("recover-materials")}
+                        checked={form.treatmentObjectives.includes("Filtration")}
                         onChange={handleCheckboxChange}
-                        value="recover-materials"
                         name="treatmentObjectives"
+                        value="Filtration"
                       />
                     }
-                    label="Recover Valuable Materials"
+                    label="Filtration (solid-liquid separation)"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={form.treatmentObjectives.includes("Stabilization")}
+                        onChange={handleCheckboxChange}
+                        name="treatmentObjectives"
+                        value="Stabilization"
+                      />
+                    }
+                    label="Stabilization (long-term containment)"
                   />
                 </FormGroup>
               </Paper>
             </Grid>
 
-            {/* Available Technology for Treatment */}
+            {/* Available Technologies */}
             <Grid item xs={12}>
-              <Paper elevation={2} sx={{ padding: 2, border: '1px solid', borderColor: theme.palette.divider, backgroundColor: prefersDarkMode ? '#444444' : '#ffffff', borderRadius: 2 }}>
-                <Typography variant="h6" sx={{ mb: 2, color: prefersDarkMode ? '#ffffff' : '#000000' }}>
-                  Available Technology for Treatment
+              <Paper
+                elevation={2}
+                sx={{
+                  padding: 2,
+                  border: "1px solid",
+                  borderColor: theme.palette.divider,
+                  backgroundColor: prefersDarkMode ? "#444444" : "#ffffff",
+                  borderRadius: 2,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ mb: 2, color: prefersDarkMode ? "#ffffff" : "#000000" }}
+                >
+                  Available Technologies
                 </Typography>
+
                 <FormGroup>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={form.technologies.includes("neutralization")}
+                        checked={form.technologies.includes("Bioremediation")}
                         onChange={handleCheckboxChange}
-                        value="neutralization"
                         name="technologies"
+                        value="Bioremediation"
                       />
                     }
-                    label="Neutralization"
+                    label="Bioremediation (use of microorganisms)"
                   />
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={form.technologies.includes("filtration")}
+                        checked={form.technologies.includes("Chemical Treatment")}
                         onChange={handleCheckboxChange}
-                        value="filtration"
                         name="technologies"
+                        value="Chemical Treatment"
                       />
                     }
-                    label="Filtration"
+                    label="Chemical Treatment (neutralization, precipitation)"
                   />
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={form.technologies.includes("bioremediation")}
+                        checked={form.technologies.includes("Physical Separation")}
                         onChange={handleCheckboxChange}
-                        value="bioremediation"
                         name="technologies"
+                        value="Physical Separation"
                       />
                     }
-                    label="Bioremediation"
+                    label="Physical Separation (e.g., filtration, centrifugation)"
                   />
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={form.technologies.includes("encapsulation")}
+                        checked={form.technologies.includes("Recycling")}
                         onChange={handleCheckboxChange}
-                        value="encapsulation"
                         name="technologies"
+                        value="Recycling"
                       />
                     }
-                    label="Encapsulation"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form.technologies.includes("tailings-reprocessing")}
-                        onChange={handleCheckboxChange}
-                        value="tailings-reprocessing"
-                        name="technologies"
-                      />
-                    }
-                    label="Tailings Reprocessing"
+                    label="Recycling (reuse of treated tailings)"
                   />
                 </FormGroup>
               </Paper>
             </Grid>
 
-            {/* Location Input */}
+            {/* Location Field */}
             <Grid item xs={12}>
-              <Paper elevation={2} sx={{ padding: 2, border: '1px solid', borderColor: theme.palette.divider, backgroundColor: prefersDarkMode ? '#444444' : '#ffffff', borderRadius: 2 }}>
-                <Typography variant="h6" sx={{ mb: 2, color: prefersDarkMode ? '#ffffff' : '#000000' }}>
-                  Location
-                </Typography>
-                <TextField
-                  label="Location"
-                  name="location"
-                  fullWidth
-                  variant="outlined"
-                  value={form.location}
-                  onChange={handleChange}
-                  sx={{ mb: 2 }}
-                  helperText="Enter the location where the tailings are being treated."
-                />
-              </Paper>
+              <TextField
+                label="Location"
+                name="location"
+                fullWidth
+                variant="outlined"
+                value={form.location}
+                onChange={handleChange}
+                sx={{ mb: 2 }}
+                helperText="Location where tailings are produced or treated."
+              />
             </Grid>
 
             {/* Submit Button */}

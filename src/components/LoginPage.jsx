@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import axios from 'axios'; // Make sure to import axios
 import { useNavigate } from 'react-router-dom';
-
-
+import { useAuth } from '../context/AuthContext';  // Import AuthContext
 import {
   Container,
   TextField,
@@ -18,13 +16,15 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-
 import miningBack from '../assets/mining-back1.jpg'; // Update the path
 
 function LoginPage() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const [error, setError] = useState(null); // For handling errors
+  const { login } = useAuth();  // Get login and authentication status from AuthContext
+  const navigate = useNavigate();
 
   const theme = createTheme({
     palette: {
@@ -53,24 +53,19 @@ function LoginPage() {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  
-  const navigate = useNavigate();
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post('http://localhost:8000/login/', {
-        username: loginData.email,
-        password: loginData.password,
-      });
-      console.log("Login successful:", response.data);
-      // Assuming the backend returns a token or similar authentication data
-      // You might want to save this in localStorage or context
-      // localStorage.setItem('authToken', response.data.token);
 
-      // Navigate to the dashboard page
-      navigate('/dashboard');
-    } catch (error) {
-      console.error("Login failed:", error.response?.data || error.message);
-      // Handle login error (e.g., show an error message to the user)
+  const handleLogin = async () => {
+    const errorResponse = await login(loginData.email, loginData.password);  // Use the login function from AuthContext
+
+    if (!errorResponse) {
+      navigate('/dashboard');  // Redirect to dashboard if login is successful
+    } else {
+      if (typeof errorResponse === "object") {
+        // If the error is an object, try to extract a message
+        setError(errorResponse.message || JSON.stringify(errorResponse));
+      } else {
+        setError(errorResponse);  // If it's a string, set it directly
+      }
     }
   };
 
@@ -90,7 +85,7 @@ function LoginPage() {
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: theme.palette.background.default,
-          backgroundImage: `url(${miningBack})`, // Only the image as background
+          backgroundImage: `url(${miningBack})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -104,11 +99,11 @@ function LoginPage() {
           sx={{
             padding: "40px",
             borderRadius: "10px",
-            backgroundColor: "rgba(255, 255, 255, 0.2)", // Semi-transparent white
-            backdropFilter: "blur(10px)", // Background blur effect
-            width: { xs: "90%", sm: "400px" }, // Responsive width
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)", // Shadow to highlight the box
-            border: "1px solid rgba(255, 255, 255, 0.3)", // Optional subtle border
+            backgroundColor: "rgba(255, 255, 255, 0.2)",
+            backdropFilter: "blur(10px)",
+            width: { xs: "90%", sm: "400px" },
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+            border: "1px solid rgba(255, 255, 255, 0.3)",
           }}
         >
           <Typography
@@ -121,6 +116,13 @@ function LoginPage() {
           >
             Welcome Back!
           </Typography>
+
+          {/* Render error message */}
+          {error && (
+            <Typography variant="body2" color="error" sx={{ mb: 2, textAlign: "center" }}>
+              {typeof error === 'string' ? error : JSON.stringify(error)}
+            </Typography>
+          )}
 
           <Box sx={{ mb: 3 }}>
             <TextField
