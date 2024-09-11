@@ -9,8 +9,7 @@ import Dashboard from "./components/dashboard/Home-screen";
 import VerificationPage from "./components/verification/verification_page";
 
 const AppRoutes = () => {
-  //const { isAuthenticated } = useAuth();
-  const isAuthenticated = true;
+  const { isAuthenticated } = useAuth();
 
   return (
     <Routes>
