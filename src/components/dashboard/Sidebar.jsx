@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FaHome, FaChartLine, FaCogs, FaUsers, FaFileAlt, FaRecycle } from 'react-icons/fa';
-import { FaBell } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import "./Sidebar-styling.css";
 
@@ -10,7 +9,6 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
   };
-  const announcementCount = 10;
 
   return (
     <div className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}>
