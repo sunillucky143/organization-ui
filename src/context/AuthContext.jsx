@@ -9,12 +9,26 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authToken, setAuthToken] = useState(null);
 
+  // Function to calculate the expiration time (30 minutes)
+  const calculateExpirationTime = () => {
+    return new Date().getTime() + 30 * 60 * 1000; // Current time + 30 minutes in milliseconds
+  };
+
+  // Function to check if the token is expired
+  const isTokenExpired = (expirationTime) => {
+    return new Date().getTime() > expirationTime;
+  };
+
   // Load token from localStorage (if available) when the app starts
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    if (token) {
+    const expirationTime = localStorage.getItem('authTokenExpiration');
+
+    if (token && expirationTime && !isTokenExpired(expirationTime)) {
       setIsAuthenticated(true);
       setAuthToken(token);
+    } else {
+      logout(); // Clear any invalid or expired tokens
     }
   }, []);
 
@@ -28,7 +42,10 @@ export const AuthProvider = ({ children }) => {
 
       if (response.status === 200) {
         const token = response.data.token; // Assuming the token is returned in the response
+        const expirationTime = calculateExpirationTime();
+
         localStorage.setItem('authToken', token); // Store token in localStorage
+        localStorage.setItem('authTokenExpiration', expirationTime); // Store expiration time in localStorage
         setAuthToken(token); // Save token to state
         setIsAuthenticated(true); // Set user as authenticated
       }
@@ -41,6 +58,7 @@ export const AuthProvider = ({ children }) => {
   // Function to handle logout
   const logout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('authTokenExpiration');
     setAuthToken(null);
     setIsAuthenticated(false);
   };

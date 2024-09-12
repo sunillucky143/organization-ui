@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext'; // Adjust import path as needed
+import { VerificationProvider } from './context/Verification_context'; // Import your VerificationProvider
 import SignUpPage from './components/SignUpPage';
 import ForgetPasswordPage from './components/ForgetPasswordPage';
 import LoginPage from './components/LoginPage'; // Assuming you have a LoginPage component
@@ -40,9 +41,11 @@ const AppRoutes = () => {
 
 const App = () => (
   <AuthProvider>
-    <Router>
-      <AppRoutes />
-    </Router>
+    <VerificationProvider> {/* Wrap with VerificationProvider */}
+      <Router>
+        <AppRoutes />
+      </Router>
+    </VerificationProvider>
   </AuthProvider>
 );
 

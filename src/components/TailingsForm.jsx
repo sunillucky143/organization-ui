@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import { useVerification } from "../context/Verification_context";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Grid,
   Typography,
   TextField,
-  Checkbox,
-  FormControlLabel,
   FormControl,
   InputLabel,
   Select,
@@ -14,13 +14,15 @@ import {
   Paper,
   Box,
   useMediaQuery,
-  FormGroup,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
+
 function TailingsForm() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const { setBackendResponse } = useVerification();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     mineralContent: "",
@@ -106,6 +108,8 @@ function TailingsForm() {
       .then(data => {
         if (data.success) {
           console.log("LLM Response:", data.response);
+          setBackendResponse(data.response);
+          navigate('/verification');
           // Handle success: Display response or take action
         } else {
           console.error("Error:", data.error);
@@ -114,16 +118,6 @@ function TailingsForm() {
       .catch(error => {
         console.error("Error submitting form:", error);
       });
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { name, checked, value } = e.target;
-    setForm((prevForm) => {
-      const updatedArray = checked
-        ? [...prevForm[name], value]
-        : prevForm[name].filter((item) => item !== value);
-      return { ...prevForm, [name]: updatedArray };
-    });
   };
 
   return (
@@ -386,53 +380,16 @@ function TailingsForm() {
                 >
                   Treatment Objectives
                 </Typography>
-
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form.treatmentObjectives.includes("Neutralization")}
-                        onChange={handleCheckboxChange}
-                        name="treatmentObjectives"
-                        value="Neutralization"
-                      />
-                    }
-                    label="Neutralization (pH adjustment)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form.treatmentObjectives.includes("Precipitation")}
-                        onChange={handleCheckboxChange}
-                        name="treatmentObjectives"
-                        value="Precipitation"
-                      />
-                    }
-                    label="Precipitation (metal recovery)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form.treatmentObjectives.includes("Filtration")}
-                        onChange={handleCheckboxChange}
-                        name="treatmentObjectives"
-                        value="Filtration"
-                      />
-                    }
-                    label="Filtration (solid-liquid separation)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form.treatmentObjectives.includes("Stabilization")}
-                        onChange={handleCheckboxChange}
-                        name="treatmentObjectives"
-                        value="Stabilization"
-                      />
-                    }
-                    label="Stabilization (long-term containment)"
-                  />
-                </FormGroup>
+                <TextField
+                  label="Enter Treatment Objectives (comma-separated)"
+                  name="treatmentObjectives"
+                  fullWidth
+                  variant="outlined"
+                  value={form.treatmentObjectives}
+                  onChange={handleChange}
+                  sx={{ mb: 2 }}
+                  helperText="List the objectives for treating the tailings, separated by commas."
+                />
               </Paper>
             </Grid>
 
@@ -454,53 +411,16 @@ function TailingsForm() {
                 >
                   Available Technologies
                 </Typography>
-
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form.technologies.includes("Bioremediation")}
-                        onChange={handleCheckboxChange}
-                        name="technologies"
-                        value="Bioremediation"
-                      />
-                    }
-                    label="Bioremediation (use of microorganisms)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form.technologies.includes("Chemical Treatment")}
-                        onChange={handleCheckboxChange}
-                        name="technologies"
-                        value="Chemical Treatment"
-                      />
-                    }
-                    label="Chemical Treatment (neutralization, precipitation)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form.technologies.includes("Physical Separation")}
-                        onChange={handleCheckboxChange}
-                        name="technologies"
-                        value="Physical Separation"
-                      />
-                    }
-                    label="Physical Separation (e.g., filtration, centrifugation)"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={form.technologies.includes("Recycling")}
-                        onChange={handleCheckboxChange}
-                        name="technologies"
-                        value="Recycling"
-                      />
-                    }
-                    label="Recycling (reuse of treated tailings)"
-                  />
-                </FormGroup>
+                <TextField
+                  label="Enter Available Technologies (comma-separated)"
+                  name="technologies"
+                  fullWidth
+                  variant="outlined"
+                  value={form.technologies}
+                  onChange={handleChange}
+                  sx={{ mb: 2 }}
+                  helperText="List the technologies available for treatment, separated by commas."
+                />
               </Paper>
             </Grid>
 
