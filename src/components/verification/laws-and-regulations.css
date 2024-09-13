@@ -1,21 +1,34 @@
-.laws-container {
+/* General styles for all sections */
+.laws-regulations-content {
   background-color: #f9f9f9;
-  padding: 10px;
+  padding: 15px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  height: 95%; /* Adjust height to allow content to determine the size */
-  width: 95%;
-  max-height: 300px; /* Set a maximum height */
-  overflow-y: auto; /* Enable vertical scrolling */
-  }
-  
-  .laws-container h2 {
-    font-size: 1.5rem;
-    color: #333;
-  }
-  
-  .laws-container p {
-    font-size: 1.1rem;
-    color: #555;
-  }
-  
+  max-height: 400px; /* Set a maximum height */
+  overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+  word-wrap: break-word; /* Ensure long words or URLs wrap within the container */
+}
+
+/* Specific styles for headings */
+.laws-regulations-content h2 {
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center; /* Center-align text */
+}
+
+/* Specific styles for paragraphs */
+.laws-regulations-content p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* Optional: Add specific styles for list items */
+.laws-regulations-content ul {
+  list-style-type: disc; /* Bullet points for unordered lists */
+  padding-left: 20px; /* Indentation for list items */
+}
+
+.laws-regulations-content li {
+  font-size: 1.1rem;
+  color: #555;
+}

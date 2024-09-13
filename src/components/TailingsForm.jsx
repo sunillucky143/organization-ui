@@ -17,11 +17,13 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import LoadingAnimation from "./LoadingAnimation";
 
 
 function TailingsForm() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const { setBackendResponse } = useVerification();
+  const { backendResponse } = useVerification();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -41,6 +43,7 @@ function TailingsForm() {
 
   const [selectedMineral, setSelectedMineral] = useState("");
   const [customMineralContent, setCustomMineralContent] = useState(""); // New state for custom mineral content
+  const [loading, setLoading] = useState(false);
 
   const theme = createTheme({
     palette: {
@@ -77,6 +80,7 @@ function TailingsForm() {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     const mineralContentToSubmit = form.mineralContent === "Other" && customMineralContent
     ? customMineralContent
     : form.mineralContent;
@@ -104,20 +108,25 @@ function TailingsForm() {
       },
       body: JSON.stringify(formData),
     })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          console.log("LLM Response:", data.response);
-          setBackendResponse(data.response);
-          navigate('/verification');
-          // Handle success: Display response or take action
-        } else {
-          console.error("Error:", data.error);
-        }
-      })
-      .catch(error => {
-        console.error("Error submitting form:", error);
-      });
+    .then(response => response.json())
+    .then(data => {
+      if (data.response.success) {
+        console.log("LLM Response:", data.response);
+        setBackendResponse({
+          procedure: data.response.response.procedure,
+          safetyProtocols: data.response.response.safetyProtocols,
+          lawsAndRegulations: data.response.response.lawsAndRegulations,
+        });
+        setLoading(false);
+        navigate('/verification')
+        console.log("Backend Response Updated:", backendResponse["procedure"]);
+      } else {
+        console.error("Error:", data.error);
+      }
+    })
+    .catch(error => {
+      console.error("Error submitting form:", error);
+    });
   };
 
   return (
@@ -136,6 +145,10 @@ function TailingsForm() {
           backgroundPosition: "center",
         }}
       >
+        {loading ? (
+          <LoadingAnimation onSuccess={() => setLoading(false)} />
+        ) : (
+          <>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
           <Typography variant="h4" sx={{ color: theme.palette.primary.main }}>
             Tailings Treatment
@@ -454,6 +467,8 @@ function TailingsForm() {
             </Grid>
           </Grid>
         </Paper>
+        </>
+        )}
       </Container>
     </ThemeProvider>
   );
