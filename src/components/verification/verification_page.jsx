@@ -42,7 +42,7 @@ const VerificationPage = () => {
         <div className="left-side">
           <h2>Procedure Section</h2>
           <div className="procedure-section">
-            <Procedure response={backendResponse}/>
+            <Procedure response={backendResponse["procedure"]}/>
           </div>
         </div>
 
@@ -51,11 +51,11 @@ const VerificationPage = () => {
           <div className="right-top">
             <h2>Safety Protocols</h2>
             <div className="safety-section">
-              <SafetyProtocols />
+              <SafetyProtocols response={backendResponse["safetyProtocols"]}/>
             </div>
             <h2>Laws & Regulations</h2>
             <div className="laws-section">
-              <LawsAndRegulations />
+              <LawsAndRegulations response={backendResponse["lawsAndRegulations"]}/>
             </div>
           </div>
           <div className="actions-section">
