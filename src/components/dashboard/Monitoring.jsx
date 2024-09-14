@@ -6,7 +6,7 @@ const Monitoring = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("/api/monitoring")
+    fetch("http://localhost:3001/api/monitoring")
       .then(response => response.json())
       .then(data => setMonitoringData(data))
       .catch(err => setError("Failed to load monitoring data"));

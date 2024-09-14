@@ -3,12 +3,31 @@ import "./Keymetrics-styling.css";
 
 const KeyMetrics = () => {
   const [metrics, setMetrics] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("/api/metrics")
-      .then(response => response.json())
-      .then(data => setMetrics(data));
+    fetch("http://localhost:3001/api/key-metrics")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then(data => setMetrics(data))
+      .catch(error => {
+        console.error("Error fetching metrics:", error);
+        setError("Failed to load metrics");
+      });
   }, []);
+
+  if (error) {
+    return (
+      <div className="key-metrics">
+        <h2>Key Metrics</h2>
+        <p className="error">{error}</p>
+      </div>
+    );
+  }
 
   if (metrics === null) {
     return (

@@ -21,7 +21,7 @@ const LoadingAnimation = ({ onSuccess }) => {
   const theme = useTheme();
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [textChangeInterval, setTextChangeInterval] = useState(null);
-  const texts = ['Loading.....', 'Processing....', 'Loading.....Generating....'];
+  const texts = ['Loading.....', 'Processing....', 'Generating....'];
 
   useEffect(() => {
     const interval = setInterval(() => {
