@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import './verification-popup.css'; // Ensure this CSS file is correctly styled for the popup
+import './verification-popup.css'; // Ensure this CSS file includes styles for a modern popup design
+import { useVerification } from "../../context/Verification_context";
+import MediaPost from "../api_interactions/api";
+import { useNavigate } from "react-router-dom";
 
 const VerificationPopup = ({ closePopup, storeConfidentialDocument, postDocument }) => {
   const [canPost, setCanPost] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const { backendResponse } = useVerification();
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const value = e.target.value.trim(); // Trim whitespace from input
