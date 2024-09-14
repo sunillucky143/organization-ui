@@ -35,18 +35,28 @@ const VerificationPopup = ({ closePopup, storeConfidentialDocument, postDocument
 
   const handlePost = async () => {
     if (canPost) {
-      await postDocument(); // Ensure postDocument is async if it involves server communication
-      await sendDocumentToServer("Post"); // Send document with the action type "Post"
-      closePopup();
+      try {
+        await MediaPost(backendResponse, "public"); // Pass the backend response here
+        console.log("Document posted:", backendResponse);
+        navigate("/dashboard");
+      } catch (error) {
+        console.error("Failed to post document:", error);
+      } finally {
+        closePopup();
+      }
     }
   };
 
   const handleContinue = async () => {
-    await storeConfidentialDocument(); // Ensure storeConfidentialDocument is async if it involves server communication
-    await sendDocumentToServer("Continue"); // Send document with the action type "Continue"
-    closePopup();
+    try{
+      await MediaPost(backendResponse, "private");
+    } catch (error) {
+      console.error("Failed to post document:", error);
+    } finally {
+      closePopup();
+    }
   };
-
+  
   return (
     <div className="popup-overlay">
       <div className="popup">
