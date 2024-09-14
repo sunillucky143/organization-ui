@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext'; // Adjust import path as needed
+import { AuthProvider, useAuth } from './context/AuthContext'; // Adjust import path as needed
+import { VerificationProvider } from './context/Verification_context';
 import SignUpPage from './components/SignUpPage';
 import ForgetPasswordPage from './components/ForgetPasswordPage';
 import LoginPage from './components/LoginPage'; // Assuming you have a LoginPage component
@@ -15,8 +16,8 @@ import FeedPage from './components/FeedPage';
 import EditProfile from './components/EditProfile'; 
 
 const AppRoutes = () => {
-  // const { isAuthenticated } = useAuth();
-  const isAuthenticated = true; // Replace with actual authentication logic
+  const { isAuthenticated } = useAuth();
+  //const isAuthenticated = true; // Replace with actual authentication logic
 
   return (
     <Routes>
@@ -62,9 +63,14 @@ const AppRoutes = () => {
 
 const App = () => (
   <AuthProvider>
+  <VerificationProvide> {/* wrap with VerificationProvide */}
     <Router>
       <AppRoutes />
     </Router>
+  </VerificationProvider>
+  <Router>
+    <AppRoutes />
+  <Router>
   </AuthProvider>
 );
 
