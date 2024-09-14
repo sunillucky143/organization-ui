@@ -17,22 +17,24 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';  
 
 const UserHomePage = () => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
   const theme = createTheme({
     palette: {
-      mode: prefersDarkMode ? 'dark' : 'light',
+      mode: 'light', 
       primary: {
-        main: prefersDarkMode ? '#BB86FC' : '#6200EE',
+        main: '#87CEEB', 
+      },
+      secondary: {
+        main: '#1E90FF', 
       },
       background: {
-        default: prefersDarkMode ? '#121212' : '#f0f0f0',
-        paper: prefersDarkMode ? '#1f1f1f' : '#ffffff',
+        default: '#87CEEB', 
+        paper: '#ffffff', 
       },
       text: {
-        primary: prefersDarkMode ? '#ffffff' : '#000000',
+        primary: '#000000', 
       },
     },
     typography: {
@@ -56,7 +58,16 @@ const UserHomePage = () => {
   };
   const handleLogout = () => {
   // remove any necessary stuff  
-  navigate('/PublicLogin'); // Redirect to login page
+    navigate('/PublicLogin'); 
+  };
+  const handleLiked = () => {
+    navigate('/LikedPostsPage');
+  };
+  const handleDisliked = () => {
+    navigate('/DislikedPostsPage');
+  };
+  const handleNavigateToSavedPosts = () => {
+    navigate('/SavedPostsPage');
   };
 
   return (
@@ -70,7 +81,7 @@ const UserHomePage = () => {
         sx={{
           minHeight: "100vh",
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "center",
           alignItems: "center",
           backgroundColor: theme.palette.background.default,
         }}
@@ -130,9 +141,15 @@ const UserHomePage = () => {
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={handleMenuClose}>Liked Posts</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Saved Posts</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Disliked Posts</MenuItem>
+            <MenuItem onClick={() => { handleMenuClose(); handleLiked(); }}>
+              Liked Posts
+            </MenuItem>
+            <MenuItem onClick={() => { handleMenuClose(); handleNavigateToSavedPosts(); }}>
+              Saved Posts
+            </MenuItem>
+            <MenuItem onClick={() => { handleMenuClose(); handleDisliked(); }}>
+              Disliked Posts
+            </MenuItem>
           </Menu>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

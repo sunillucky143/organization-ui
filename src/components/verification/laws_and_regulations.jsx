@@ -1,7 +1,7 @@
 import React from 'react';
 import './laws-and-regulations.css'; // Add relevant styles
 
-const LawsAndRegulations = ({ response }) => {
+const LawsAndRegulations = ({ response, isUpdateMode }) => {
   const formatResponse = (text) => {
     // Basic replacement for markdown-like formatting
     return text
@@ -10,7 +10,11 @@ const LawsAndRegulations = ({ response }) => {
   };
 
   return (
-    <div className="laws-regulations-content" dangerouslySetInnerHTML={{ __html: formatResponse(response) }} />
+    <div 
+      className="laws-regulations-content" 
+      dangerouslySetInnerHTML={{ __html: formatResponse(response) }} 
+      contentEditable={!isUpdateMode} // Disable editing if in update mode
+    />
   );
 };
 

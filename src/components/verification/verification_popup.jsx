@@ -1,28 +1,62 @@
 import React, { useState } from "react";
-import './verification-popup.css'; // New CSS for a modern popup design
+import './verification-popup.css'; // Ensure this CSS file is correctly styled for the popup
 
 const VerificationPopup = ({ closePopup, storeConfidentialDocument, postDocument }) => {
   const [canPost, setCanPost] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim(); // Trim whitespace from input
     setInputValue(value);
     setCanPost(value.toLowerCase() === "post");
   };
 
-  const handlePost = () => {
-    if (canPost) {
-      postDocument();
-      closePopup();
+  const sendDocumentToServer = async (actionType) => {
+    const documentContent = `
+      Action: ${actionType}
+      Input Value: ${inputValue}
+    `;
+
+    try {
+      await fetch("/api/save-document", { // Replace with your backend endpoint
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: documentContent,
+          action: actionType,
+        }),
+      });
+    } catch (error) {
+      console.error("Error sending document to server:", error);
     }
   };
 
-  const handleContinue = () => {
-    storeConfidentialDocument();
-    closePopup();
+  const handlePost = async () => {
+    if (canPost) {
+      try {
+        await MediaPost(backendResponse, "public"); // Pass the backend response here
+        console.log("Document posted:", backendResponse);
+        navigate("/dashboard");
+      } catch (error) {
+        console.error("Failed to post document:", error);
+      } finally {
+        closePopup();
+      }
+    }
   };
 
+  const handleContinue = async () => {
+    try{
+      await MediaPost(backendResponse, "private");
+    } catch (error) {
+      console.error("Failed to post document:", error);
+    } finally {
+      closePopup();
+    }
+  };
+  
   return (
     <div className="popup-overlay">
       <div className="popup">

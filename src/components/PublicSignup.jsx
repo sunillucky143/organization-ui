@@ -1,11 +1,7 @@
-
-import React from 'react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import miningBack from '../assets/mining-back1.jpg'; 
 import axios from 'axios';
-
 import {
   Container,
   TextField,
@@ -31,10 +27,10 @@ const SignUpPage = () => {
     });
 
     const { fullName, username, emailAddress, password, confirmPassword } = formData;
-
     
     const navigate = useNavigate();
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -64,12 +60,12 @@ const SignUpPage = () => {
             confirmPassword,
           });
           console.log(res.data);  // Handle successful response (e.g., redirect)
-          navigate('/login');  // Redirect to login page or another page after submission
+          navigate('/PublicLogin');  // Redirect to login page or another page after submission
         } catch (error) {
           console.error(error.response?.data || error.message);
         }
       }
-  };
+    };
 
     const theme = createTheme({
         palette: {
@@ -139,62 +135,66 @@ const SignUpPage = () => {
             Sign Up
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <TextField
-            label="Full Name"
-            name="fullName"
-            fullWidth
-            variant="outlined"
-            value={formData.fullName}
-            onChange={handleChange}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Email Address"
-            name="emailAddress"
-            type="email"
-            fullWidth
-            variant="outlined"
-            value={formData.emailAddress}
-            onChange={handleChange}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            name="password"
-            fullWidth
-            variant="outlined"
-            value={formData.password}
-            onChange={handleChange}
-            onBlur={onBlur}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Confirm Password"
-            type="password"
-            name="confirmPassword"
-            fullWidth
-            variant="outlined"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            onBlur={onBlur}
-            sx={{ mb: 2 }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-            disabled={isButtonDisabled}
-            fullWidth
-            sx={{ mb: 2 }}
-          >
-            Sign Up
-          </Button>
-          {password !== confirmPassword && <p color='red'>Passwords do not match!</p>}
+            <TextField
+              label="Full Name"
+              name="fullName"
+              fullWidth
+              variant="outlined"
+              value={formData.fullName}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Email Address"
+              name="emailAddress"
+              type="email"
+              fullWidth
+              variant="outlined"
+              value={formData.emailAddress}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              name="password"
+              fullWidth
+              variant="outlined"
+              value={formData.password}
+              onChange={handleChange}
+              onBlur={onBlur}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              fullWidth
+              variant="outlined"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              onBlur={onBlur}
+              sx={{ mb: 2 }}
+            />
+            {password !== confirmPassword && (
+              <Typography color="error" sx={{ mb: 2 }}>
+                Passwords do not match!
+              </Typography>
+            )}
+            <Button
+              type="submit" 
+              variant="contained"
+              color="primary"
+              disabled={isButtonDisabled}
+              fullWidth
+              sx={{ mb: 2 }}
+            >
+              Sign Up
+            </Button>
           </Box>
           <Typography variant="body2" component="p" textAlign="center">
             Already have an account?{' '}
-            <Link to="/login" style={{ color: "black" }}>
+            <Link to="/PublicLogin" style={{ color: "black" }}>
               Log In
             </Link>
           </Typography>
