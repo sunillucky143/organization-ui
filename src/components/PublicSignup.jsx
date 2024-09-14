@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -22,14 +23,14 @@ const SignUpPage = () => {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
     const [formData, setFormData] = useState({
-        organizationName: "",
+        fullName: "",
         username: "",
         emailAddress: "",
         password: "",
         confirmPassword: "",
     });
 
-    const { organizationName, username, emailAddress, password, confirmPassword } = formData;
+    const { fullName, username, emailAddress, password, confirmPassword } = formData;
 
     
     const navigate = useNavigate();
@@ -56,7 +57,7 @@ const SignUpPage = () => {
       if (!isButtonDisabled) {
         try {
           const res = await axios.post('http://localhost:8000/register/', {
-            organizationName,
+            fullName,
             username,
             email: emailAddress, // Ensure the naming matches with backend
             password,
@@ -139,20 +140,11 @@ const SignUpPage = () => {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
-            label="Company Name"
-            name="organizationName"
+            label="Full Name"
+            name="fullName"
             fullWidth
             variant="outlined"
-            value={formData.organizationName}
-            onChange={handleChange}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Employee Name"
-            name="username"
-            fullWidth
-            variant="outlined"
-            value={formData.username}
+            value={formData.fullName}
             onChange={handleChange}
             sx={{ mb: 2 }}
           />
@@ -202,7 +194,7 @@ const SignUpPage = () => {
           </Box>
           <Typography variant="body2" component="p" textAlign="center">
             Already have an account?{' '}
-            <Link to="/" style={{ color: "black" }}>
+            <Link to="/login" style={{ color: "black" }}>
               Log In
             </Link>
           </Typography>
