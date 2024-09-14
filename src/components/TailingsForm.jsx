@@ -47,22 +47,26 @@ function TailingsForm() {
 
   const theme = createTheme({
     palette: {
-      mode: prefersDarkMode ? "dark" : "light",
+      mode: 'light', 
       primary: {
-        main: prefersDarkMode ? "#BB86FC" : "#6200EE",
+        main: '#87CEEB', 
+      },
+      secondary: {
+        main: '#1E90FF', 
       },
       background: {
-        default: prefersDarkMode ? "#121212" : "#f9f9f9",
-        paper: prefersDarkMode ? "#1f1f1f" : "#ffffff",
+        default: '#87CEEB', 
+        paper: '#ffffff', 
       },
       text: {
-        primary: prefersDarkMode ? "#ffffff" : "#000000",
+        primary: '#000000', 
       },
     },
     typography: {
       fontFamily: "'Poppins', sans-serif",
     },
   });
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -150,11 +154,17 @@ function TailingsForm() {
         ) : (
           <>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-          <Typography variant="h4" sx={{ color: theme.palette.primary.main }}>
+          <Typography variant="h4" sx={{ color: '#ffffff' }}>
             Tailings Treatment
           </Typography>
         </Box>
-
+        <Button
+                variant="outlined"
+                color='#ffffff'
+                onClick={() => navigate(-1)} // Navigate back to the previous page
+              >
+                Back
+              </Button>
         <Paper
           component={motion.div}
           initial={{ y: 20, opacity: 0 }}
@@ -172,13 +182,13 @@ function TailingsForm() {
                   padding: 2,
                   border: "1px solid",
                   borderColor: theme.palette.divider,
-                  backgroundColor: prefersDarkMode ? "#444444" : "#ffffff",
+                  backgroundColor: '#ffffff',
                   borderRadius: 2,
                 }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ mb: 2, color: prefersDarkMode ? "#ffffff" : "#000000" }}
+                  sx={{ mb: 2, color:  "#000000" }}
                 >
                   Mineral Content
                 </Typography>
@@ -273,13 +283,13 @@ function TailingsForm() {
                   padding: 2,
                   border: "1px solid",
                   borderColor: theme.palette.divider,
-                  backgroundColor: prefersDarkMode ? "#444444" : "#ffffff",
+                  backgroundColor: '#ffffff',
                   borderRadius: 2,
                 }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ mb: 2, color: prefersDarkMode ? "#ffffff" : "#000000" }}
+                  sx={{ mb: 2, color:  "#000000" }}
                 >
                   Water Quality Data
                 </Typography>
@@ -329,13 +339,13 @@ function TailingsForm() {
                   padding: 2,
                   border: "1px solid",
                   borderColor: theme.palette.divider,
-                  backgroundColor: prefersDarkMode ? "#444444" : "#ffffff",
+                  backgroundColor: '#ffffff',
                   borderRadius: 2,
                 }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ mb: 2, color: prefersDarkMode ? "#ffffff" : "#000000" }}
+                  sx={{ mb: 2, color: "#000000" }}
                 >
                   Tailings Storage & Environmental Concerns
                 </Typography>
@@ -383,13 +393,13 @@ function TailingsForm() {
                   padding: 2,
                   border: "1px solid",
                   borderColor: theme.palette.divider,
-                  backgroundColor: prefersDarkMode ? "#444444" : "#ffffff",
+                  backgroundColor: '#ffffff',
                   borderRadius: 2,
                 }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ mb: 2, color: prefersDarkMode ? "#ffffff" : "#000000" }}
+                  sx={{ mb: 2, color: "#000000" }}
                 >
                   Treatment Objectives
                 </Typography>
@@ -414,13 +424,13 @@ function TailingsForm() {
                   padding: 2,
                   border: "1px solid",
                   borderColor: theme.palette.divider,
-                  backgroundColor: prefersDarkMode ? "#444444" : "#ffffff",
+                  backgroundColor:  "#ffffff",
                   borderRadius: 2,
                 }}
               >
                 <Typography
                   variant="h6"
-                  sx={{ mb: 2, color: prefersDarkMode ? "#ffffff" : "#000000" }}
+                  sx={{ mb: 2, color:  "#000000" }}
                 >
                   Available Technologies
                 </Typography>
@@ -455,7 +465,12 @@ function TailingsForm() {
             <Grid item xs={12}>
               <Button
                 variant="contained"
-                color="primary"
+                sx={{
+                  backgroundColor: '#388E3C', 
+                  '&:hover': {
+                    backgroundColor: '#2C6B2F', 
+                  },
+                }}
                 fullWidth
                 onClick={handleSubmit}
                 component={motion.div}
@@ -464,6 +479,7 @@ function TailingsForm() {
               >
                 Submit
               </Button>
+
             </Grid>
           </Grid>
         </Paper>

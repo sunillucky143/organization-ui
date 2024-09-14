@@ -22,6 +22,7 @@ const Sidebar = () => {
         <li><a href="#"><FaCogs /> {isExpanded && 'Sustainability'}</a></li>
         <li><a href="#"><FaUsers /> {isExpanded && 'User Management'}</a></li>
         <li><Link to="/tailing-form"><FaRecycle /> {isExpanded && 'Tailing Treatment'}</Link></li>
+        <li><Link to="/Documents"><FaRecycle /> {isExpanded && 'Documents'}</Link></li>
       </ul>
     </div>
   );

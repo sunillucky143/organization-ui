@@ -14,6 +14,10 @@ import PublicSignup from './components/PublicSignup';
 import PublicHome from './components/PublicHome';  
 import FeedPage from './components/FeedPage'; 
 import EditProfile from './components/EditProfile'; 
+import LikedPostsPage from './components/LikedPostsPage';
+import DislikedPostsPage from './components/DislikedPostsPage';
+import SavedPostsPage from './components/SavedPostsPage';
+import Documents from './components/Documents';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -55,6 +59,22 @@ const AppRoutes = () => {
         path="/EditProfile"
         element={isAuthenticated ? <EditProfile/> : <Navigate to="/" />}
       />
+      <Route
+        path="/LikedPostsPage"
+        element={isAuthenticated ? <LikedPostsPage/> : <Navigate to="/" />}
+      />
+      <Route
+        path="/DislikedPostsPage"
+        element={isAuthenticated ? <DislikedPostsPage/> : <Navigate to="/" />}
+      />
+      <Route
+        path="/SavedPostsPage"
+        element={isAuthenticated ? <SavedPostsPage/> : <Navigate to="/" />}
+      />
+       <Route
+        path="/Documents"
+        element={isAuthenticated ? <Documents/> : <Navigate to="/" />}
+      />
       {/* Redirect to WelcomePage for any other route */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
@@ -63,15 +83,13 @@ const AppRoutes = () => {
 
 const App = () => (
   <AuthProvider>
-  <VerificationProvide> {/* wrap with VerificationProvide */}
-    <Router>
-      <AppRoutes />
-    </Router>
-  </VerificationProvider>
-  <Router>
-    <AppRoutes />
-  <Router>
+    <VerificationProvider> {/* Wrap with VerificationProvider */}
+      <Router>
+        <AppRoutes />
+      </Router>
+    </VerificationProvider>
   </AuthProvider>
 );
+
 
 export default App;

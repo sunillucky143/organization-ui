@@ -22,22 +22,24 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import miningBack from '../assets/mining-back1.jpg'; // Update the path
 
 function LoginPage() {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
 
   const theme = createTheme({
     palette: {
-      mode: prefersDarkMode ? 'dark' : 'light',
+      mode: 'light', 
       primary: {
-        main: prefersDarkMode ? '#BB86FC' : '#6200EE',
+        main: '#87CEEB',
+      },
+      secondary: {
+        main: '#FF0000', 
       },
       background: {
-        default: prefersDarkMode ? '#121212' : '#f0f0f0',
-        paper: prefersDarkMode ? '#1f1f1f' : '#ffffff',
+        default: '#87CEEB', 
+        paper: '#ffffff', 
       },
       text: {
-        primary: prefersDarkMode ? '#ffffff' : '#000000',
+        primary: '#000000',
       },
     },
     typography: {
@@ -67,7 +69,7 @@ function LoginPage() {
       // localStorage.setItem('authToken', response.data.token);
 
       // Navigate to the dashboard page
-      navigate('/dashboard');
+      navigate('/PublicHome');
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
       // Handle login error (e.g., show an error message to the user)

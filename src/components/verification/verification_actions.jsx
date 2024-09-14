@@ -1,9 +1,9 @@
 import React from 'react';
 import './verification-action.css'; // Optional: Custom styles for this component
 
-const VerificationActions = ({ onVerifyClick }) => {
+const VerificationActions = ({ onVerifyClick, onUpdateClick }) => { // Add onUpdateClick prop
   const handleUpdateClick = () => {
-    console.log("Document updated."); // Handle the update logic
+    if (onUpdateClick) onUpdateClick(); // Call the prop function
   };
 
   const handleShareClick = () => {

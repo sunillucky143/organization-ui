@@ -1,25 +1,49 @@
 import React, { useState } from "react";
-import './verification-popup.css'; // New CSS for a modern popup design
+import './verification-popup.css'; // Ensure this CSS file is correctly styled for the popup
 
 const VerificationPopup = ({ closePopup, storeConfidentialDocument, postDocument }) => {
   const [canPost, setCanPost] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim(); // Trim whitespace from input
     setInputValue(value);
     setCanPost(value.toLowerCase() === "post");
   };
 
-  const handlePost = () => {
+  const sendDocumentToServer = async (actionType) => {
+    const documentContent = `
+      Action: ${actionType}
+      Input Value: ${inputValue}
+    `;
+
+    try {
+      await fetch("/api/save-document", { // Replace with your backend endpoint
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: documentContent,
+          action: actionType,
+        }),
+      });
+    } catch (error) {
+      console.error("Error sending document to server:", error);
+    }
+  };
+
+  const handlePost = async () => {
     if (canPost) {
-      postDocument();
+      await postDocument(); // Ensure postDocument is async if it involves server communication
+      await sendDocumentToServer("Post"); // Send document with the action type "Post"
       closePopup();
     }
   };
 
-  const handleContinue = () => {
-    storeConfidentialDocument();
+  const handleContinue = async () => {
+    await storeConfidentialDocument(); // Ensure storeConfidentialDocument is async if it involves server communication
+    await sendDocumentToServer("Continue"); // Send document with the action type "Continue"
     closePopup();
   };
 

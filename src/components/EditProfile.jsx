@@ -25,23 +25,26 @@ const EditProfilePage = () => {
 
   const theme = createTheme({
     palette: {
-      mode: prefersDarkMode ? 'dark' : 'light',
+      mode: 'light', // Always light mode
       primary: {
-        main: prefersDarkMode ? '#BB86FC' : '#6200EE',
+        main: '#87CEEB', // Adjust as needed for light mode
+      },
+      secondary: {
+        main: '#1E90FF', // Red
       },
       background: {
-        default: prefersDarkMode ? '#121212' : '#f0f0f0',
-        paper: prefersDarkMode ? '#1f1f1f' : '#ffffff',
+        default: '#333333', // Light background
+        paper: '#ffffff', // Paper background
       },
       text: {
-        primary: prefersDarkMode ? '#ffffff' : '#000000',
+        primary: '#000000', // Black text for light mode
       },
     },
     typography: {
       fontFamily: "'Poppins', sans-serif",
     },
   });
-
+  
   const handleSave = () => {
     if (password.length === 0) {
       setPasswordError(true);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -10,30 +10,33 @@ import {
   Avatar,
   Button,
   TextField,
-  useMediaQuery,
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import { AccountCircle as AccountCircleIcon, ThumbUp, ThumbDown, Bookmark } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';  
+import MiningExample from '../assets/MiningExample.png';
+import axios from 'axios';
 
 const FeedPage = () => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();  
 
   const theme = createTheme({
     palette: {
-      mode: prefersDarkMode ? 'dark' : 'light',
+      mode: 'light', 
       primary: {
-        main: prefersDarkMode ? '#BB86FC' : '#6200EE',
+        main: '#4CAF50',
+      },
+      secondary: {
+        main: '#FF0000', 
       },
       background: {
-        default: prefersDarkMode ? '#121212' : '#f0f0f0',
-        paper: prefersDarkMode ? '#1f1f1f' : '#ffffff',
+        default: '#87CEEB', 
+        paper: '#ffffff', 
       },
       text: {
-        primary: prefersDarkMode ? '#ffffff' : '#000000',
+        primary: '#000000',
       },
     },
     typography: {
@@ -53,43 +56,105 @@ const FeedPage = () => {
     navigate('/PublicHome');  
   };
 
-  // Example feed data: multiple file types
+  const handleLogout = () => {
+    // remove any necessary stuff  
+    navigate('/PublicLogin'); 
+  };
+  
+  // Example feed data with text files included
   const feedItems = [
-    { type: 'image', src: '/src/assets/MiningExample.png', title: 'Mining Plan for ******' },
-    { type: 'video', src: 'https://www.youtube.com/watch?v=K4TOrB7at0Y', title: 'Video Post' },
-    { type: 'document', src: '/path/to/sample-document.pdf', title: 'PDF Document' },
+    { id: 1, type: 'image', src: MiningExample, title: 'Mining Plan for Example' },
+    { id: 2, type: 'video', src: 'https://www.youtube.com/watch?v=K4TOrB7at0Y', title: 'Video Post' },
+    { id: 3, type: 'document', src: '/path/to/sample-document.txt', title: 'Text Document' },
   ];
 
-  
   const [likes, setLikes] = useState({});
   const [dislikes, setDislikes] = useState({});
   const [saved, setSaved] = useState({});
   const [comments, setComments] = useState({}); 
   const [newComment, setNewComment] = useState({}); 
+  const [commentCounts, setCommentCounts] = useState({});
+  const [likeCounts, setLikeCounts] = useState({});
+  const [dislikeCounts, setDislikeCounts] = useState({});
+  const [saveCounts, setSaveCounts] = useState({});
+  const [textContent, setTextContent] = useState({});
 
-  const toggleLike = (index) => {
-    setLikes((prev) => ({ ...prev, [index]: !prev[index] }));
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        for (const item of feedItems) {
+          if (item.type === 'document' && item.src.endsWith('.txt')) {
+            // Fetch text file content
+            const res = await axios.get(item.src);
+            setTextContent((prev) => ({ ...prev, [item.id]: res.data }));
+          } else {
+            // Fetch other feed data
+            const res = await axios.get(`http://localhost:8000/feed/${item.id}/data`);
+            const { likeCount, dislikeCount, saveCount, commentCount, comments } = res.data;
+            setLikeCounts((prev) => ({ ...prev, [item.id]: likeCount }));
+            setDislikeCounts((prev) => ({ ...prev, [item.id]: dislikeCount }));
+            setSaveCounts((prev) => ({ ...prev, [item.id]: saveCount }));
+            setCommentCounts((prev) => ({ ...prev, [item.id]: commentCount }));
+            setComments((prev) => ({ ...prev, [item.id]: comments || [] }));
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching feed data', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const toggleLike = async (index) => {
+    try {
+      await axios.post(`http://localhost:8000/feed/${index}/like`);
+      setLikes((prev) =>({ ...prev, [index]: !prev[index] }));
+      setLikeCounts((prev) => ({ ...prev, [index]: prev[index] + (likes[index] ? -1 : 1) }));
+    } catch (error) {
+      console.error('Error liking post', error);
+    }
   };
 
-  const toggleDislike = (index) => {
-    setDislikes((prev) => ({ ...prev, [index]: !prev[index] }));
+  const toggleDislike = async (index) => {
+    try {
+      await axios.post(`http://localhost:8000/feed/${index}/dislike`);
+      setDislikes((prev) => ({ ...prev, [index]: !prev[index] }));
+      setDislikeCounts((prev) => ({ ...prev, [index]: prev[index] + (dislikes[index] ? -1 : 1) }));
+    } catch (error) {
+      console.error('Error disliking post', error);
+    }
   };
 
-  const toggleSave = (index) => {
-    setSaved((prev) => ({ ...prev, [index]: !prev[index] }));
+  const toggleSave = async (index) => {
+    try {
+      await axios.post(`http://localhost:8000/feed/${index}/save`);
+      setSaved((prev) => ({ ...prev, [index]: !prev[index] }));
+      setSaveCounts((prev) => ({ ...prev, [index]: prev[index] + (saved[index] ? -1 : 1) }));
+    } catch (error) {
+      console.error('Error saving post', error);
+    }
   };
 
   const handleNewCommentChange = (index, value) => {
     setNewComment((prev) => ({ ...prev, [index]: value }));
   };
 
-  const handleAddComment = (index) => {
+  const handleAddComment = async (index) => {
     if (!newComment[index]) return;
-    setComments((prev) => ({
-      ...prev,
-      [index]: [...(prev[index] || []), newComment[index]],
-    }));
-    setNewComment((prev) => ({ ...prev, [index]: '' }));
+    try {
+      const res = await axios.post(`http://localhost:8000/feed/${index}/comment`, {
+        comment: newComment[index],
+      });
+      setComments((prev) => ({
+        ...prev,
+        [index]: [...(prev[index] || []), res.data.comment],
+      }));
+      setCommentCounts((prev) => ({ ...prev, [index]: prev[index] + 1 }));
+      setNewComment((prev) => ({ ...prev, [index]: '' }));
+    } catch (error) {
+      console.error('Error adding comment', error);
+    }
   };
 
   const renderFeedItem = (item) => {
@@ -104,6 +169,13 @@ const FeedPage = () => {
           </video>
         );
       case 'document':
+        if (item.src.endsWith('.txt')) {
+          return (
+            <Paper sx={{ padding: 2 }}>
+              <Typography variant="body1">{textContent[item.id]}</Typography>
+            </Paper>
+          );
+        }
         return (
           <a href={item.src} target="_blank" rel="noopener noreferrer">
             <Paper sx={{ padding: 2, textAlign: 'center' }}>
@@ -130,7 +202,7 @@ const FeedPage = () => {
           flexDirection: "column",
           alignItems: "center",
           backgroundColor: theme.palette.background.default,
-          position: 'relative', // This ensures the icon stays in the corner
+          position: 'relative', 
         }}
       >
         {/* Profile Icon Button */}
@@ -153,8 +225,8 @@ const FeedPage = () => {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleGoToHome}>Home</MenuItem> {/* Updated to use navigate */}
-          <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+          <MenuItem onClick={handleGoToHome}>Home</MenuItem> 
+          <MenuItem onClick={() => { handleMenuClose(); handleLogout(); }}>Logout</MenuItem>
         </Menu>
 
         <Paper
@@ -166,13 +238,14 @@ const FeedPage = () => {
           sx={{
             padding: "40px",
             borderRadius: "10px",
-            backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white
-            width: "100%", // Responsive width
-            maxWidth: "800px", // Max width for larger screens
+            backgroundColor: "rgba(255, 255, 255, 0.8)", 
+            width: "100%", 
+            maxWidth: "800px", 
           }}
         >
           <Typography
             variant="h4"
+           
             sx={{
               mb: 3,
               textAlign: "center",
@@ -193,38 +266,38 @@ const FeedPage = () => {
                 {/* Action buttons */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 2 }}>
                   <Button
-                    variant={likes[index] ? 'contained' : 'outlined'}
+                    variant={likes[item.id] ? 'contained' : 'outlined'}
                     color="primary"
                     startIcon={<ThumbUp />}
-                    onClick={() => toggleLike(index)}
+                    onClick={() => toggleLike(item.id)}
                   >
-                    Like
+                    Like ({likeCounts[item.id] || 0})
                   </Button>
                   <Button
-                    variant={dislikes[index] ? 'contained' : 'outlined'}
+                    variant={dislikes[item.id] ? 'contained' : 'outlined'}
                     color="secondary"
                     startIcon={<ThumbDown />}
-                    onClick={() => toggleDislike(index)}
+                    onClick={() => toggleDislike(item.id)}
                   >
-                    Dislike
+                    Dislike ({dislikeCounts[item.id] || 0})
                   </Button>
                   <Button
-                    variant={saved[index] ? 'contained' : 'outlined'}
+                    variant={saved[item.id] ? 'contained' : 'outlined'}
                     startIcon={<Bookmark />}
-                    onClick={() => toggleSave(index)}
+                    onClick={() => toggleSave(item.id)}
                   >
-                    Save
+                    Save ({saveCounts[item.id] || 0})
                   </Button>
                 </Box>
 
                 {/* Comment Section */}
                 <Box sx={{ mt: 2 }}>
                   <Typography variant="h6" sx={{ mb: 1 }}>
-                    Comments
+                    Comments ({commentCounts[item.id] || 0})
                   </Typography>
                   <Box sx={{ mb: 2 }}>
-                    {comments[index]?.length > 0 ? (
-                      comments[index].map((comment, commentIndex) => (
+                    {comments[item.id]?.length > 0 ? (
+                      comments[item.id].map((comment, commentIndex) => (
                         <Paper key={commentIndex} sx={{ padding: 1, mb: 1 }}>
                           <Typography variant="body2">{comment}</Typography>
                         </Paper>
@@ -239,14 +312,14 @@ const FeedPage = () => {
                     label="Add a comment"
                     variant="outlined"
                     fullWidth
-                    value={newComment[index] || ''}
-                    onChange={(e) => handleNewCommentChange(index, e.target.value)}
+                    value={newComment[item.id] || ''}
+                    onChange={(e) => handleNewCommentChange(item.id, e.target.value)}
                     sx={{ mb: 1 }}
                   />
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => handleAddComment(index)}
+                    onClick={() => handleAddComment(item.id)}
                   >
                     Post Comment
                   </Button>

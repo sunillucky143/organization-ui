@@ -1,9 +1,7 @@
-// Procedure.jsx
-
 import React from 'react';
-import './procedure-ele.css'
+import './procedure-ele.css';
 
-const Procedure = ({ response }) => {
+const Procedure = ({ response, isUpdateMode }) => {
   const formatResponse = (text) => {
     // Basic replacement for markdown-like formatting
     return text
@@ -12,7 +10,11 @@ const Procedure = ({ response }) => {
   };
 
   return (
-    <div className="procedure-content" dangerouslySetInnerHTML={{ __html: formatResponse(response) }} />
+    <div 
+      className="procedure-content" 
+      dangerouslySetInnerHTML={{ __html: formatResponse(response) }} 
+      contentEditable={!isUpdateMode} // Disable editing if in update mode
+    />
   );
 };
 

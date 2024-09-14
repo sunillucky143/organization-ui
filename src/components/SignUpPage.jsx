@@ -202,7 +202,7 @@ const SignUpPage = () => {
           </Box>
           <Typography variant="body2" component="p" textAlign="center">
             Already have an account?{' '}
-            <Link to="/" style={{ color: "black" }}>
+            <Link to="/login" style={{ color: "black" }}>
               Log In
             </Link>
           </Typography>
