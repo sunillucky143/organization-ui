@@ -6,7 +6,7 @@ const Workflow = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/workflow")
+    fetch("http://tailings-treatment.westus2.cloudapp.azure.com/node/workflow")
       .then(response => response.json())
       .then(data => setProgress(data.progress))
       .catch(err => setError("Failed to load workflow data"));

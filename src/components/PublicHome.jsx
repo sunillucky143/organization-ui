@@ -9,7 +9,6 @@ import {
   Menu,
   MenuItem,
   IconButton,
-  useMediaQuery,
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion';

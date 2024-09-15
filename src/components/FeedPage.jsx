@@ -20,7 +20,7 @@ import axios from 'axios';
 
 const FeedPage = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
   const theme = createTheme({
     palette: {
@@ -89,7 +89,7 @@ const FeedPage = () => {
             setTextContent((prev) => ({ ...prev, [item.id]: res.data }));
           } else {
             // Fetch other feed data
-            const res = await axios.get(`http://localhost:8000/feed/${item.id}/data`);
+            const res = await axios.get(`http:///tailings-treatment.westus2.cloudapp.azure.com/feed/${item.id}/data`);
             const { likeCount, dislikeCount, saveCount, commentCount, comments } = res.data;
             setLikeCounts((prev) => ({ ...prev, [item.id]: likeCount }));
             setDislikeCounts((prev) => ({ ...prev, [item.id]: dislikeCount }));
@@ -108,7 +108,7 @@ const FeedPage = () => {
 
   const toggleLike = async (index) => {
     try {
-      await axios.post(`http://localhost:8000/feed/${index}/like`);
+      await axios.post(`http:///tailings-treatment.westus2.cloudapp.azure.com/feed/${index}/like`);
       setLikes((prev) =>({ ...prev, [index]: !prev[index] }));
       setLikeCounts((prev) => ({ ...prev, [index]: prev[index] + (likes[index] ? -1 : 1) }));
     } catch (error) {
@@ -118,7 +118,7 @@ const FeedPage = () => {
 
   const toggleDislike = async (index) => {
     try {
-      await axios.post(`http://localhost:8000/feed/${index}/dislike`);
+      await axios.post(`http:///tailings-treatment.westus2.cloudapp.azure.com/feed/${index}/dislike`);
       setDislikes((prev) => ({ ...prev, [index]: !prev[index] }));
       setDislikeCounts((prev) => ({ ...prev, [index]: prev[index] + (dislikes[index] ? -1 : 1) }));
     } catch (error) {
@@ -128,7 +128,7 @@ const FeedPage = () => {
 
   const toggleSave = async (index) => {
     try {
-      await axios.post(`http://localhost:8000/feed/${index}/save`);
+      await axios.post(`http:///tailings-treatment.westus2.cloudapp.azure.com/feed/${index}/save`);
       setSaved((prev) => ({ ...prev, [index]: !prev[index] }));
       setSaveCounts((prev) => ({ ...prev, [index]: prev[index] + (saved[index] ? -1 : 1) }));
     } catch (error) {
@@ -142,20 +142,52 @@ const FeedPage = () => {
 
   const handleAddComment = async (index) => {
     if (!newComment[index]) return;
+  
     try {
-      const res = await axios.post(`http://localhost:8000/feed/${index}/comment`, {
-        comment: newComment[index],
+      // First, analyze the comment's risk factor
+      const analysisResponse = await fetch('http://tailings-treatment.westus2.cloudapp.azure.com/api/comment/analysis/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ comment: newComment[index] }),
       });
-      setComments((prev) => ({
-        ...prev,
-        [index]: [...(prev[index] || []), res.data.comment],
-      }));
-      setCommentCounts((prev) => ({ ...prev, [index]: prev[index] + 1 }));
-      setNewComment((prev) => ({ ...prev, [index]: '' }));
+  
+      const analysisData = await analysisResponse.json();
+  
+      if (analysisData.response.success) {
+        console.log("LLM Response:", analysisData.response);
+        // Use the analysis response directly to post the comment
+        const riskFactor = analysisData.response.response.risk_factor; // Extract the risk factor from the response
+  
+        // Only after successful analysis, post the comment to the feed
+        const res = await axios.post(`http://tailings-treatment.westus2.cloudapp.azure.com/api/feed/comment/`, {
+          risk_factor: riskFactor, // Use the risk factor directly
+          comment: newComment[index],
+        });
+  
+        if (res.status === 201) {
+          alert("Comment forwarded to database");
+          navigate('/FeedPage');
+        }
+  
+        // Update the comments in the frontend
+        setComments((prev) => ({
+          ...prev,
+          [index]: [...(prev[index] || []), res.data.comment],
+        }));
+  
+        setCommentCounts((prev) => ({ ...prev, [index]: prev[index] + 1 }));
+        setNewComment((prev) => ({ ...prev, [index]: '' }));
+      } else {
+        console.error("Error in analysis:", analysisData.error);
+      }
     } catch (error) {
-      console.error('Error adding comment', error);
+      console.error('Error adding comment:', error);
     }
   };
+  
+  
 
   const renderFeedItem = (item) => {
     switch (item.type) {

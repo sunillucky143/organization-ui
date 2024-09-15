@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Button, Container, Typography, List, ListItem, ListItemText, Chip } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for back button functionality
+import { Button, Container, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import './Documents-styling.css';
 
 const theme = createTheme({
   palette: {
@@ -27,80 +29,56 @@ const theme = createTheme({
 
 const Documents = () => {
   const [documents, setDocuments] = useState([]);
+  const [expandedDocumentId, setExpandedDocumentId] = useState(null);
   const navigate = useNavigate(); // Initialize navigate hook
 
   useEffect(() => {
-    fetchDocumentsFromBackend();
+    const fetchDocuments = async () => {
+      try {
+        const response = await axios.get('http://tailings-treatment.westus2.cloudapp.azure.com/api/post/');
+        const responseData = response.data;
+        console.log(responseData);
+
+        const documentsArray = Array.isArray(responseData) ? responseData : Object.values(responseData);
+        setDocuments(documentsArray);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDocuments();
   }, []);
 
-  const fetchDocumentsFromBackend = async () => {
-    try {
-      const response = await fetch("/api/documents"); // Replace with your backend endpoint
-      const data = await response.json();
-      setDocuments(data); // Assuming the backend returns an array of documents
-    } catch (error) {
-      console.error("Error fetching documents:", error);
-    }
-  };
-
-  const handleDownloadDocument = (documentContent, documentName) => {
-    const blob = new Blob([documentContent], { type: "text/plain;charset=utf-8" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${documentName}.txt`;
-    a.click();
-    window.URL.revokeObjectURL(url);
+  const toggleExpand = (id) => {
+    setExpandedDocumentId(expandedDocumentId === id ? null : id);
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Container sx={{ backgroundColor: theme.palette.background.default, padding: '2rem', borderRadius: '8px' }}>
-        <Button variant="outlined" color="secondary" onClick={() => navigate(-1)} sx={{ marginBottom: '1rem' }}>
+        <Button variant="outlined" color="solid black" onClick={() => navigate(-1)} sx={{ marginBottom: '1rem' }}>
           Back
         </Button>
 
-        <Typography variant="h4" color="textPrimary" gutterBottom>
+        <Typography variant="h4" color="textPrimary" textAlign="center" gutterBottom>
           Available Documents
         </Typography>
-
-        <List>
-          {documents.map((doc, index) => (
-            <ListItem key={index} divider>
-              <ListItemText
-                primary={
-                  <>
-                    <Typography variant="body1" color="textPrimary">
-                      Document: {doc.name}
-                    </Typography>
-                    {doc.posted && (
-                      <Chip
-                        label="Posted"
-                        color="primary"
-                        sx={{ marginLeft: '1rem' }}
-                      />
-                    )}
-                  </>
-                }
-                secondary={`Content: ${doc.content}`}
-              />
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={() => handleDownloadDocument(doc.content, doc.name)}
-              >
-                Download
-              </Button>
-            </ListItem>
-          ))}
-        </List>
-
-        {documents.length === 0 && (
-          <Typography variant="body1" color="textPrimary">
-            No documents available.
-          </Typography>
-        )}
-      </Container>
+        </Container>
+       <div className="document-list">
+        {documents.map((doc) => (
+          <div
+            key={doc.post_id}
+            className={`document-item ${expandedDocumentId === doc.post_id ? 'expanded' : ''}`}
+            style={{ borderColor: "#87CEEB", boxShadow: "0px 4px 12px 2px rgba(128, 128, 128, 0.5)"}}
+            onClick={() => toggleExpand(doc.post_id)}
+          >
+            <p className="document-description">
+              {expandedDocumentId === doc.post_id
+                ? doc.procedure || 'No description available'
+                : (doc.procedure && doc.procedure.length > 50 ? doc.procedure.substring(0, 50) + '...' : doc.procedure)}
+            </p>
+          </div>
+        ))}
+       </div>
     </ThemeProvider>
   );
 };

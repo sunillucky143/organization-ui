@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaBell } from "react-icons/fa";
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import "./Header-styling.css";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const announcementCount = 120;
   const navigate = useNavigate();
+  const [announcementCount, setAnnouncementCount] = useState(0);
+  
+  useEffect(() => {
+    const fetchAnnouncementCount = async () => {
+      try {
+        const response = await axios.get('http://tailings-treatment.westus2.cloudapp.azure.com/api/comment_count/');
+        setAnnouncementCount(response.data.count);
+      } catch (error) {
+        console.error('Error fetching announcement count:', error);
+      }
+    };
+
+    fetchAnnouncementCount();
+  }, []);
 
   const handleLogout = () => {
     navigate('/login');

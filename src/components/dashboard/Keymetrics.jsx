@@ -6,7 +6,7 @@ const KeyMetrics = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/key-metrics")
+    fetch("http://tailings-treatment.westus2.cloudapp.azure.com/node/key-metrics")
       .then(response => {
         if (!response.ok) {
           throw new Error("Network response was not ok");

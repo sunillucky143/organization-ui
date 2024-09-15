@@ -52,7 +52,7 @@ const SignUpPage = () => {
       e.preventDefault();
       if (!isButtonDisabled) {
         try {
-          const res = await axios.post('http://localhost:8000/register/', {
+          const res = await axios.post('http://tailings-treatment.westus2.cloudapp.azure.com/api/register/', {
             fullName,
             username,
             email: emailAddress, // Ensure the naming matches with backend

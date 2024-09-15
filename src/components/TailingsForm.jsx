@@ -13,7 +13,6 @@ import {
   Button,
   Paper,
   Box,
-  useMediaQuery,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -21,7 +20,6 @@ import LoadingAnimation from "./LoadingAnimation";
 
 
 function TailingsForm() {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const { setBackendResponse } = useVerification();
   const { backendResponse } = useVerification();
   const navigate = useNavigate();
@@ -105,7 +103,8 @@ function TailingsForm() {
     };
     console.log(formData);
   
-    fetch('http://localhost:8000/process-form/', {
+    //http://tailings-treatment.westus2.cloudapp.azure.com/process-form/
+    fetch('http://tailings-treatment.westus2.cloudapp.azure.com/api/process-form/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
