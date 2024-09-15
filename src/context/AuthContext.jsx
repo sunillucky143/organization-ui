@@ -35,7 +35,8 @@ export const AuthProvider = ({ children }) => {
   // Function to handle login
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:8000/login/', {
+      //http://tailings-treatment.westus2.cloudapp.azure.com/login/
+      const response = await axios.post('http://tailings-treatment.westus2.cloudapp.azure.com/api/login/', {
         username: email,
         password: password,
       });

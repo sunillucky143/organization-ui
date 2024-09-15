@@ -7,7 +7,7 @@ const Reports = () => {
   const [error, setError] = useState(null); // Add error state
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/reports")
+    fetch("http://tailings-treatment.westus2.cloudapp.azure.com/node/reports")
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

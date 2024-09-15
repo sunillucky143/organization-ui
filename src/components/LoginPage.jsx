@@ -10,7 +10,6 @@ import {
   Box,
   IconButton,
   InputAdornment,
-  useMediaQuery,
   Link,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";

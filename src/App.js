@@ -18,6 +18,9 @@ import LikedPostsPage from './components/LikedPostsPage';
 import DislikedPostsPage from './components/DislikedPostsPage';
 import SavedPostsPage from './components/SavedPostsPage';
 import Documents from './components/Documents';
+import AnnouncementsPage from './components/dashboard/AnnouncementsPage';
+
+
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -36,44 +39,47 @@ const AppRoutes = () => {
       {/* Protected Routes */}
       <Route
         path="/tailing-form"
-        element={isAuthenticated ? <TailingsForm /> : <Navigate to="/" />}
+        element={isAuthenticated ? <TailingsForm /> : <Navigate to="/login" />}
       />
       <Route
         path="/verification"
-        element={isAuthenticated ? <VerificationPage /> : <Navigate to="/" />}
+        element={isAuthenticated ? <VerificationPage /> : <Navigate to="/login" />}
       />
       <Route
         path="/dashboard"
-        element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />}
+        element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
       />
-
+      <Route
+        path="/announcements"
+        element={isAuthenticated ? <AnnouncementsPage /> : <Navigate to="/login" />}
+      />
       <Route
         path="/PublicHome"
-        element={isAuthenticated ? <PublicHome/> : <Navigate to="/" />}
+        element={isAuthenticated ? <PublicHome/> : <Navigate to="/PublicLogin" />}
       />
        <Route
         path="/FeedPage"
-        element={isAuthenticated ? <FeedPage/> : <Navigate to="/" />}
+        element={isAuthenticated ? <FeedPage/> : <Navigate to="/PublicLogin" />}
       />
       <Route
         path="/EditProfile"
-        element={isAuthenticated ? <EditProfile/> : <Navigate to="/" />}
+        element={isAuthenticated ? <EditProfile/> : <Navigate to="/PublicLogin" />}
       />
       <Route
         path="/LikedPostsPage"
-        element={isAuthenticated ? <LikedPostsPage/> : <Navigate to="/" />}
+        element={isAuthenticated ? <LikedPostsPage/> : <Navigate to="/PublicLogin" />}
       />
       <Route
         path="/DislikedPostsPage"
-        element={isAuthenticated ? <DislikedPostsPage/> : <Navigate to="/" />}
+        element={isAuthenticated ? <DislikedPostsPage/> : <Navigate to="/PublicLogin" />}
       />
       <Route
         path="/SavedPostsPage"
-        element={isAuthenticated ? <SavedPostsPage/> : <Navigate to="/" />}
+        element={isAuthenticated ? <SavedPostsPage/> : <Navigate to="/PublicLogin" />}
       />
        <Route
         path="/Documents"
-        element={isAuthenticated ? <Documents/> : <Navigate to="/" />}
+        element={isAuthenticated ? <Documents/> : <Navigate to="/login" />}
       />
       {/* Redirect to WelcomePage for any other route */}
       <Route path="*" element={<Navigate to="/" />} />
@@ -90,6 +96,5 @@ const App = () => (
     </VerificationProvider>
   </AuthProvider>
 );
-
 
 export default App;

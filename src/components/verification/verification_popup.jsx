@@ -5,37 +5,15 @@ import MediaPost from "../api_interactions/api";
 import { useNavigate } from "react-router-dom";
 
 const VerificationPopup = ({ closePopup, storeConfidentialDocument, postDocument }) => {
+  const navigate = useNavigate();
   const [canPost, setCanPost] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { backendResponse } = useVerification();
-  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    const value = e.target.value.trim(); // Trim whitespace from input
+    const value = e.target.value;
     setInputValue(value);
-    setCanPost(value.toLowerCase() === "post");
-  };
-
-  const sendDocumentToServer = async (actionType) => {
-    const documentContent = `
-      Action: ${actionType}
-      Input Value: ${inputValue}
-    `;
-
-    try {
-      await fetch("/api/save-document", { // Replace with your backend endpoint
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: documentContent,
-          action: actionType,
-        }),
-      });
-    } catch (error) {
-      console.error("Error sending document to server:", error);
-    }
+    setCanPost(value.trim().toLowerCase() === "post");
   };
 
   const handlePost = async () => {
@@ -53,19 +31,21 @@ const VerificationPopup = ({ closePopup, storeConfidentialDocument, postDocument
   };
 
   const handleContinue = async () => {
-    try{
-      await MediaPost(backendResponse, "private");
+    try {
+      await MediaPost(backendResponse, "private"); // Pass the backend response here
+      console.log("Document posted:", backendResponse);
+      navigate("/dashboard");
     } catch (error) {
       console.error("Failed to post document:", error);
     } finally {
       closePopup();
     }
   };
-  
+
   return (
-    <div className="popup-overlay">
+    <div className="popup-overlay" role="dialog" aria-labelledby="popup-title" aria-modal="true">
       <div className="popup">
-        <h2 className="popup-title">Publish Document</h2>
+        <h2 id="popup-title" className="popup-title">Publish Document</h2>
         <p className="popup-text">
           Type "post" to enable the Post button, or click "Continue" to save it as confidential.
         </p>
@@ -75,12 +55,17 @@ const VerificationPopup = ({ closePopup, storeConfidentialDocument, postDocument
           value={inputValue}
           onChange={handleInputChange}
           placeholder="Type 'post' here"
+          aria-describedby="post-instructions"
         />
+        <div id="post-instructions" className="popup-text">
+          The Post button will be enabled when you type "post".
+        </div>
         <div className="popup-buttons">
           <button
             disabled={!canPost}
             className={`popup-btn post-btn ${canPost ? "enabled" : ""}`}
             onClick={handlePost}
+            aria-disabled={!canPost}
           >
             Post
           </button>

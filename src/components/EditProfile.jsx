@@ -8,7 +8,6 @@ import {
   TextField,
   Avatar,
   IconButton,
-  useMediaQuery,
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion';
@@ -16,7 +15,6 @@ import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const EditProfilePage = () => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

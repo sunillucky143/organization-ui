@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from 'axios'; // Make sure to import axios
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../context/AuthContext";
 
 
 import {
@@ -12,7 +12,6 @@ import {
   Box,
   IconButton,
   InputAdornment,
-  useMediaQuery,
   Link,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -24,6 +23,8 @@ import miningBack from '../assets/mining-back1.jpg'; // Update the path
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const { login } = useAuth(); 
+  const [error, setError] = useState(null);
 
   const theme = createTheme({
     palette: {
@@ -58,21 +59,17 @@ function LoginPage() {
   
   const navigate = useNavigate();
   const handleLogin = async () => {
-    try {
-      const response = await axios.post('http://localhost:8000/login/', {
-        username: loginData.email,
-        password: loginData.password,
-      });
-      console.log("Login successful:", response.data);
-      // Assuming the backend returns a token or similar authentication data
-      // You might want to save this in localStorage or context
-      // localStorage.setItem('authToken', response.data.token);
+    const errorResponse = await login(loginData.email, loginData.password);  // Use the login function from AuthContext
 
-      // Navigate to the dashboard page
-      navigate('/PublicHome');
-    } catch (error) {
-      console.error("Login failed:", error.response?.data || error.message);
-      // Handle login error (e.g., show an error message to the user)
+    if (!errorResponse) {
+      navigate('/PublicHome');  // Redirect to dashboard if login is successful
+    } else {
+      if (typeof errorResponse === "object") {
+        // If the error is an object, try to extract a message
+        setError(errorResponse.message || JSON.stringify(errorResponse));
+      } else {
+        setError(errorResponse);  // If it's a string, set it directly
+      }
     }
   };
 
@@ -134,6 +131,11 @@ function LoginPage() {
           >
             Welcome Back!
           </Typography>
+          {error && (
+            <Typography variant="body2" color="error" sx={{ mb: 2, textAlign: "center" }}>
+              {typeof error === 'string' ? error : JSON.stringify(error)}
+            </Typography>
+          )}
 
           <Box sx={{ mb: 3 }}>
             <TextField
