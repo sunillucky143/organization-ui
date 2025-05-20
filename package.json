@@ -1,6 +1,14 @@
 {
   "name": "organization-ui",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "A React-based UI for managing organization hierarchies and teams.",
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/sunillucky143/organization-ui.git"
+  },
+  "keywords": [],
+  "author": "Sunil Gundala",
+  "license": "MIT"
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",
