@@ -64,28 +64,28 @@ List software and versions required to run the project:
    git clone https://github.com/OWNER/REPO.git
    cd REPO
    ```
-### Install dependencies:
-  ```bash
-  npm install           # or pip install -r requirements.txt
-  ```
-### Copy and update environment variables:
-  ```bash
-  cp .env.example .env
-  # Edit .env with your settings
-  ```
+2. Install dependencies:
+   ```bash
+   npm install           # or pip install -r requirements.txt
+   ```
+3. Copy and update environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your settings
+   ```
 ## Usage
-### Start the development server:
+- Start the development server:
   ```bash
   npm start              # or python -m src.main
   ```
-### Example
+- Example
   ```bash
   # Run a specific module
   python -m src.module1 --input data/sample.json
-```
+   ```
 
 ## Configuration
-### Environment variables (in .env):
+- Environment variables (in .env):
   ```bash
   DATABASE_URL=postgres://user:pass@localhost:5432/db
   API_KEY=your_api_key_here
@@ -112,7 +112,7 @@ All user and developer guides are in the [docs/](docs/) folder:
 - [Deployment Manual](docs/deployment.md)
 
 ## Tests
-### Run unit and integration tests:
+- Run unit and integration tests:
   ```bash
   npm test      # or pytest --maxfail=1 --disable-warnings -q
   ```
