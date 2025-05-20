@@ -135,4 +135,4 @@ Distributed under the MIT [License](LICENSE.md). See LICENSE for more informatio
 ## Acknowledgements
 
 ## Contact
-Maintainer: [@SunilGundala](https://github.com/sunillucky143/) - [gundalasunil2001@gmail.com](gundalasunil2001@gmail.com)
+Maintainer: [@SunilGundala](https://github.com/sunillucky143/) - <a href="mailto:gundalasunil2001@gmail.com">gundalasunil2001@gmail.com</a>
