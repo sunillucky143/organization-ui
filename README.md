@@ -55,14 +55,13 @@ Explain the purpose, scope, and audience of the project. What problem does it so
 ## Prerequisites
 List software and versions required to run the project:
 - Node.js >= 14.x
-- Python >= 3.8
 - Docker & Docker Compose (for containerized development)
 
 ## Installation
 1. Clone the repo:
    ```bash
-   git clone https://github.com/OWNER/REPO.git
-   cd REPO
+   git clone https://github.com/sunillucky143/organization-ui
+   cd <REPO>
    ```
 2. Install dependencies:
    ```bash
@@ -78,11 +77,6 @@ List software and versions required to run the project:
   ```bash
   npm start              # or python -m src.main
   ```
-- Example
-  ```bash
-  # Run a specific module
-  python -m src.module1 --input data/sample.json
-   ```
 
 ## Configuration
 - Environment variables (in .env):
